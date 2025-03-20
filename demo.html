@@ -35,17 +35,34 @@
             color: lightblue; /* Style hyperlinks */
             text-decoration: underline;
         }
+        .separator {
+            width: 80%;
+            height: 2px;
+            background-color: white;
+            margin: 20px auto;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: gray;
+        }
     </style>
 </head>
 <body>
     <h1 id="location-title">Detecting Your Location...</h1>
     <p id="state-display">Fetching IP info...</p>
 
+    <!-- Separator -->
+    <div class="separator"></div>
+
     <!-- Search Input -->
     <p>Incorrect area? Please enter your area name to search:</p>
     <input type="text" id="manual-input" placeholder="Enter state or country">
     <button onclick="searchLocation()">Search</button>
     <p id="suggestion" style="color: yellow;"></p>
+
+    <!-- Footer -->
+    <p class="footer">In memory of Josh, created by Elijah Segers and Maddie Andros</p>
 
     <script>
         let detectedCountry = "";
@@ -176,19 +193,6 @@
 
             return matrix[a.length][b.length];
         }
-
-        // Pre-defined list of valid locations (all 50 U.S. states + 195 countries)
-        const validLocations = [
-            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-            "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-            "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-            "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
-            "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
-            "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
-        ];
 
         getLocation();
     </script>
