@@ -31,6 +31,10 @@
             padding: 10px;
             margin: 5px;
         }
+        a {
+            color: lightblue; /* Style hyperlinks */
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -47,32 +51,6 @@
         let detectedCountry = "";
         let detectedRegion = "";
 
-        // List of all 50 U.S. states and 195 countries
-        const validLocations = [
-            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-            "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-            "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-            "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
-            "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
-            "Italy", "Spain", "Portugal", "Netherlands", "Belgium", "Sweden", "Norway", "Denmark", "Finland",
-            "Russia", "China", "Japan", "South Korea", "India", "Pakistan", "Bangladesh", "Indonesia",
-            "Australia", "New Zealand", "South Africa", "Egypt", "Turkey", "Saudi Arabia", "Iran", "Iraq",
-            "Syria", "Afghanistan", "Thailand", "Vietnam", "Malaysia", "Singapore", "Philippines",
-            "Israel", "Ukraine", "Poland", "Greece", "Romania", "Hungary", "Switzerland", "Austria",
-            "Ireland", "Czech Republic", "Slovakia", "Bulgaria", "Serbia", "Croatia", "Slovenia", "Lithuania",
-            "Latvia", "Estonia", "Belarus", "Kazakhstan", "Uzbekistan", "Armenia", "Georgia", "Azerbaijan",
-            "United Arab Emirates", "Kuwait", "Qatar", "Bahrain", "Oman", "Lebanon", "Jordan", "Yemen",
-            "Ethiopia", "Kenya", "Nigeria", "Ghana", "Ivory Coast", "Algeria", "Morocco", "Tunisia",
-            "Libya", "Sudan", "South Sudan", "Zambia", "Zimbabwe", "Botswana", "Namibia", "Mozambique",
-            "Madagascar", "Angola", "Congo", "Tanzania", "Uganda", "Cameroon", "Senegal", "Mali", "Niger",
-            "Chad", "Burkina Faso", "Mauritania", "Somalia", "Central African Republic", "Eritrea",
-            "Djibouti", "Rwanda", "Burundi", "Sierra Leone", "Liberia", "Togo", "Benin", "Guinea", "Eswatini",
-            "Lesotho", "Seychelles", "Malawi", "Gabon", "Gambia", "Comoros", "Mauritius", "Cape Verde"
-        ];
-
         async function getLocation() {
             try {
                 // Fetch user location data from a free API
@@ -87,7 +65,7 @@
                 detectedRegion = data.region;
 
                 // Display the confirmation message
-                document.getElementById("state-display").textContent = `${detectedRegion.toUpperCase()} CONFIRMED`;
+                document.getElementById("state-display").textContent = `${capitalizeFirstLetter(detectedRegion)} CONFIRMED`;
 
                 // Hide "Detecting Your Location..." smoothly
                 document.getElementById("location-title").style.opacity = "0";
@@ -110,7 +88,7 @@
                 alert("Please enter a location.");
                 return;
             }
-        
+
             // Check for spelling mistakes and suggest the closest match
             let correctedName = findClosestMatch(userInput);
             if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
@@ -119,11 +97,10 @@
             } else {
                 document.getElementById("suggestion").textContent = "";
             }
-        
+
             // Try to load the file based on corrected user input
             searchFiles(userInput, detectedCountry || "Global");
         }
-
 
         async function searchFiles(region, country) {
             const folderPath = `${country}/${region}.txt`;
@@ -136,9 +113,9 @@
                     throw new Error("File not found");
                 }
 
-                // Read the file contents and display multiple lines correctly
+                // Read the file contents and format it properly
                 const text = await response.text();
-                document.getElementById("state-display").textContent = text.trim();
+                document.getElementById("state-display").innerHTML = formatText(text.trim());
 
             } catch (error) {
                 console.warn(`File not found for ${region}, showing fallback message.`);
@@ -146,6 +123,27 @@
             }
         }
 
+        // Function to capitalize the first letter of a word
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+        }
+
+        // Function to format text: makes phone numbers and URLs clickable
+        function formatText(text) {
+            // Convert phone numbers into clickable links
+            text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, 
+                '<a href="tel:$&">$&</a>');
+
+            // Convert URLs into clickable links
+            text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, function(url) {
+                let formattedUrl = url.startsWith("www.") ? "http://" + url : url;
+                return `<a href="${formattedUrl}" target="_blank">${url}</a>`;
+            });
+
+            return text;
+        }
+
+        // Function to find the closest match for spell-checking
         function findClosestMatch(input) {
             let closestMatch = "";
             let shortestDistance = Infinity;
@@ -161,6 +159,7 @@
             return shortestDistance <= 2 ? closestMatch : "";
         }
 
+        // Levenshtein Distance Algorithm (calculates similarity between strings)
         function levenshteinDistance(a, b) {
             const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
                 Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
@@ -177,6 +176,19 @@
 
             return matrix[a.length][b.length];
         }
+
+        // Pre-defined list of valid locations (all 50 U.S. states + 195 countries)
+        const validLocations = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+            "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
+            "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+            "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+            "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
+            "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
+        ];
 
         getLocation();
     </script>
