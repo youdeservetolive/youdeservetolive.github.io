@@ -105,24 +105,25 @@
         }
 
         function searchLocation() {
-            let userInput = document.getElementById("manual-input").value.trim();
+            let userInput = capitalizeFirstLetter(document.getElementById("manual-input").value.trim());
             if (!userInput) {
                 alert("Please enter a location.");
                 return;
             }
-
+        
             // Check for spelling mistakes and suggest the closest match
             let correctedName = findClosestMatch(userInput);
             if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
                 document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
-                userInput = correctedName; // Auto-correct input
+                userInput = capitalizeFirstLetter(correctedName); // Auto-correct input with capitalization
             } else {
                 document.getElementById("suggestion").textContent = "";
             }
-
+        
             // Try to load the file based on corrected user input
             searchFiles(userInput, detectedCountry || "Global");
         }
+
 
         async function searchFiles(region, country) {
             const folderPath = `${country}/${region}.txt`;
