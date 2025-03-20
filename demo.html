@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You Deserve To Live</title>
+    <title>IP Location Detector</title>
     <style>
         body {
             background-color: black;
@@ -41,64 +41,49 @@
                 const country = data.country;
                 const state = data.region;
 
-                // Check if the country folder exists
-                const countryFolderPath = `${country}/`;
-                const countryFilePath = `${country}/${country}.txt`;
-                
-                fetch(countryFolderPath, { method: 'HEAD' })  // Checking folder existence
-                    .then(res => {
-                        if (!res.ok) throw new Error("Country folder not found");
-                        
-                        // If country folder exists, check for state file (U.S.) or country file
-                        if (country === "United States") {
-                            fetch(`United States/${state}.txt`)
-                                .then(res => {
-                                    if (!res.ok) throw new Error("State file not found");
-                                    return res.text();
-                                })
-                                .then(text => {
-                                    document.getElementById("state-display").textContent = text;
-                                })
-                                .catch(() => loadNotSupported(country));
-                        } else {
-                            fetch(countryFilePath)
-                                .then(res => {
-                                    if (!res.ok) throw new Error("Country file not found");
-                                    return res.text();
-                                })
-                                .then(text => {
-                                    document.getElementById("state-display").textContent = text;
-                                })
-                                .catch(() => loadNotSupported(country));
-                        }
-                    })
-                    .catch(() => loadNotSupported(country));
+                if (country === "United States") {
+                    document.getElementById("state-display").textContent = `${state.toUpperCase()} CONFIRMED`;
+                    
+                    // Attempt to load the state-specific file
+                    fetch(`United States/${state}.txt`)
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error("File not found");
+                            }
+                            return res.text();
+                        })
+                        .then(text => {
+                            document.getElementById("state-display").textContent = text;
+                        })
+                        .catch(() => {
+                            document.getElementById("state-display").textContent = "Your area is not yet supported.";
+                        });
+
+                } else {
+                    // If not in the U.S., load emergency data from NotSupported.json
+                    fetch('NotSupported.json')
+                        .then(res => res.json())
+                        .then(emergencyData => {
+                            if (emergencyData[country]) {
+                                let emergencyInfo = `Your area is not yet supported.\n\nEmergency Numbers for ${country}:\n`;
+                                for (let key in emergencyData[country]) {
+                                    emergencyInfo += `${key}: ${emergencyData[country][key]}\n`;
+                                }
+                                document.getElementById("state-display").textContent = emergencyInfo;
+                            } else {
+                                document.getElementById("state-display").textContent = "Your area is not yet supported, and no emergency data is available.";
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching emergency data:", error);
+                            document.getElementById("state-display").textContent = "Error loading emergency contacts.";
+                        });
+                }
 
             } catch (error) {
                 console.error("Error fetching location:", error);
                 document.getElementById("state-display").textContent = "Error fetching location.";
             }
-        }
-
-        // Function to load NotSupported.json if no file is found
-        async function loadNotSupported(country) {
-            fetch('NotSupported.json')
-                .then(res => res.json())
-                .then(emergencyData => {
-                    if (emergencyData[country]) {
-                        let emergencyInfo = `Your area is not yet supported.\n\nEmergency Numbers for ${country}:\n`;
-                        for (let key in emergencyData[country]) {
-                            emergencyInfo += `${key}: ${emergencyData[country][key]}\n`;
-                        }
-                        document.getElementById("state-display").textContent = emergencyInfo;
-                    } else {
-                        document.getElementById("state-display").textContent = "Your area is not yet supported, and no emergency data is available.";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching emergency data:", error);
-                    document.getElementById("state-display").textContent = "Error loading emergency contacts.";
-                });
         }
 
         getLocation();
