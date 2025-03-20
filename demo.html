@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Location Detector</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: "Courier New", Courier, monospace;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        p {
+            font-size: 1.5rem;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detecting Your Location...</h1>
+    <p id="state-display">Fetching IP info...</p>
+
+    <script>
+        async function getLocation() {
+            try {
+                // Fetch location data from an HTTPS-compatible API
+                const response = await fetch('https://ipwhois.app/json/');
+                const data = await response.json();
+                console.log("Full API Response:", data);
+
+                const country = data.country;
+                const state = data.region;
+
+                if (country === "United States") {
+                    document.getElementById("state-display").textContent = `${state.toUpperCase()} CONFIRMED`;
+                    
+                    // Attempt to load the state-specific file
+                    fetch(`United States/${state}.txt`)
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error("File not found");
+                            }
+                            return res.text();
+                        })
+                        .then(text => {
+                            document.getElementById("state-display").textContent = text;
+                        })
+                        .catch(() => {
+                            document.getElementById("state-display").textContent = "Your area is not yet supported.";
+                        });
+
+                } else {
+                    // If not in the U.S., load emergency data from NotSupported.json
+                    fetch('NotSupported.json')
+                        .then(res => res.json())
+                        .then(emergencyData => {
+                            if (emergencyData[country]) {
+                                let emergencyInfo = `Your area is not yet supported.\n\nEmergency Numbers for ${country}:\n`;
+                                for (let key in emergencyData[country]) {
+                                    emergencyInfo += `${key}: ${emergencyData[country][key]}\n`;
+                                }
+                                document.getElementById("state-display").textContent = emergencyInfo;
+                            } else {
+                                document.getElementById("state-display").textContent = "Your area is not yet supported, and no emergency data is available.";
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching emergency data:", error);
+                            document.getElementById("state-display").textContent = "Error loading emergency contacts.";
+                        });
+                }
+
+            } catch (error) {
+                console.error("Error fetching location:", error);
+                document.getElementById("state-display").textContent = "Error fetching location.";
+            }
+        }
+
+        getLocation();
+    </script>
+</body>
+</html>
