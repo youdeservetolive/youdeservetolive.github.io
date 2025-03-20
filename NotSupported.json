@@ -1,0 +1,176 @@
+{
+  "United States": {
+    "Emergency": "911",
+    "Suicide Hotline": "988"
+  },
+  "Algeria": {
+    "Emergency": "34342 and 43",
+    "Suicide Hotline": "0021 3983 2000 58"
+  },
+  "Angola": {
+    "Emergency": "113"
+  },
+  "Argentina": {
+    "Emergency": "911",
+    "Suicide Hotline": "135"
+  },
+  "Armenia": {
+    "Emergency": "911 and 112",
+    "Suicide Hotline": "(2) 538194"
+  },
+  "Australia": {
+    "Emergency": "000",
+    "Suicide Hotline": "131114"
+  },
+  "Austria": {
+    "Emergency": "112",
+    "Telefonseelsorge 24/7": "142",
+    "Rat auf Draht 24/7": "147 (Youth)"
+  },
+  "Bahamas": {
+    "Emergency": "911",
+    "Suicide Hotline": "(2) 322-2763"
+  },
+  "Bahrain": {
+    "Emergency": "999"
+  },
+  "Bangladesh": {
+    "Emergency": "999"
+  },
+  "Barbados": {
+    "Emergency": "911",
+    "Suicide Hotline": "Samaritan Barbados (246) 4299999"
+  },
+  "Belgium": {
+    "Emergency": "112",
+    "Suicide Hotline": "Stichting Zelfmoordlijn 1813"
+  },
+  "Bolivia": {
+    "Emergency": "911",
+    "Suicide Hotline": "3911270"
+  },
+  "Bosnia & Herzegovina": {
+    "Suicide Hotline": "080 05 03 05"
+  },
+  "Botswana": {
+    "Emergency": "911",
+    "Suicide Hotline": "+2673911270"
+  },
+  "Brazil": {
+    "Emergency": "188"
+  },
+  "Bulgaria": {
+    "Emergency": "112",
+    "Suicide Hotline": "0035 9249 17 223"
+  },
+  "Burundi": {
+    "Emergency": "117"
+  },
+  "Burkina Faso": {
+    "Emergency": "17"
+  },
+  "Canada": {
+    "Emergency": "911",
+    "Suicide Hotline": "1 (833) 456 4566"
+  },
+  "China": {
+    "Emergency": "110",
+    "Suicide Hotline": "800-810-1117"
+  },
+  "Colombia": {
+    "24/7 Helpline in Barranquilla": "1(00 57 5) 372 27 27",
+    "24/7 Hotline Bogota": "(57-1) 323 24 25"
+  },
+  "Costa Rica": {
+    "Emergency": "911",
+    "Suicide Hotline": "506-253-5439"
+  },
+  "Croatia": {
+    "Emergency": "112"
+  },
+  "Czech Republic": {
+    "Emergency": "112"
+  },
+  "Denmark": {
+    "Emergency": "112",
+    "Suicide Hotline": "4570201201"
+  },
+  "Dominican Republic": {
+    "Emergency": "911",
+    "Suicide Hotline": "(809) 562-3500"
+  },
+  "Ecuador": {
+    "Emergency": "911"
+  },
+  "Egypt": {
+    "Emergency": "122",
+    "Suicide Hotline": "131114"
+  },
+  "El Salvador": {
+    "Emergency": "911",
+    "Suicide Hotline": "126"
+  },
+  "Estonia": {
+    "Emergency": "112",
+    "Suicide Hotline": "3726558088",
+    "Russian Suicide Hotline": "3726555688"
+  },
+  "Ethiopia": {
+    "Emergency": "911"
+  },
+  "Finland": {
+    "Emergency": "112",
+    "Suicide Hotline": "010 195 202"
+  },
+  "France": {
+    "Emergency": "112",
+    "Suicide Hotline": "0145394000"
+  },
+  "Germany": {
+    "Emergency": "112",
+    "Suicide Hotline": "0800 111 0 111"
+  },
+  "Ghana": {
+    "Emergency": "999",
+    "Suicide Hotline": "2332 444 71279"
+  },
+  "Greece": {
+    "Emergency": "1018"
+  },
+  "India": {
+    "Emergency": "112",
+    "Suicide Hotline": "8888817666"
+  },
+  "Italy": {
+    "Emergency": "112",
+    "Suicide Hotline": "800860022"
+  },
+  "Japan": {
+    "Emergency": "110",
+    "Suicide Hotline": "810352869090"
+  },
+  "Kenya": {
+    "Emergency": "999",
+    "Suicide Hotline": "722178177"
+  },
+  "Malaysia": {
+    "Emergency": "999",
+    "Suicide Hotline": "(06) 2842500"
+  },
+  "Mexico": {
+    "Emergency": "911",
+    "Suicide Hotline": "5255102550"
+  },
+  "New Zealand": {
+    "Emergency": "111",
+    "Suicide Hotline": "1737"
+  },
+  "United Kingdom": {
+    "Emergency": "999",
+    "Suicide Hotline": "0800 689 5652"
+  },
+  "Zimbabwe": {
+    "Emergency": "999",
+    "Suicide Hotline": "080 12 333 333"
+  }
+}
