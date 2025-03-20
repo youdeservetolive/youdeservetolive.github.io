@@ -33,8 +33,18 @@
     <script>
         async function getLocation() {
             try {
-                // Fetch location data from an HTTPS-compatible API
-                const response = await fetch('https://ipwhois.app/json/');
+                // Fetch location data securely from your Vercel backend
+                const response = await fetch('https://ydtlbackend.vercel.app/api/get-location', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-From': window.location.hostname // Verify request origin
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch location data.");
+                }
+
                 const data = await response.json();
                 console.log("Full API Response:", data);
 
@@ -43,7 +53,7 @@
 
                 if (country === "United States") {
                     document.getElementById("state-display").textContent = `${state.toUpperCase()} CONFIRMED`;
-                    
+
                     // Attempt to load the state-specific file
                     fetch(`United States/${state}.txt`)
                         .then(res => {
