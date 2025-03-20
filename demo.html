@@ -23,6 +23,7 @@
         p {
             font-size: 1.5rem;
             margin-bottom: 20px;
+            white-space: pre-line; /* Ensures new lines are displayed */
         }
         input, button {
             font-size: 1rem;
@@ -80,22 +81,25 @@
             searchFiles(userInput, detectedCountry || "Global");
         }
 
-        function searchFiles(region, country) {
+        async function searchFiles(region, country) {
             const folderPath = `${country}/${region}.txt`; 
 
-            fetch(folderPath)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("File not found");
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    document.getElementById("state-display").textContent = text;
-                })
-                .catch(() => {
-                    document.getElementById("state-display").textContent = `No data available for ${region}.`;
-                });
+            try {
+                const response = await fetch(folderPath);
+
+                // Check if the response is valid and not an HTML file
+                if (!response.ok || response.headers.get("Content-Type").includes("text/html")) {
+                    throw new Error("File not found");
+                }
+
+                // Read the file contents and display multiple lines correctly
+                const text = await response.text();
+                document.getElementById("state-display").textContent = text.trim(); // Removes excess whitespace
+
+            } catch (error) {
+                console.warn(`File not found for ${region}, showing fallback message.`);
+                document.getElementById("state-display").textContent = `No data available for ${region}.`;
+            }
         }
 
         getLocation();
