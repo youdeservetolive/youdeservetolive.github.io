@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resources | YDTL</title>
   <style>
     :root {
       --bg-color: black;
       --text-color: white;
       --link-color: lightblue;
-      --footer-color: gray;
-      --nav-border-color: gray;
+      --border-color: gray;
     }
 
-    body.light-mode {
+    body.light {
       --bg-color: white;
       --text-color: black;
       --link-color: blue;
-      --footer-color: #555;
-      --nav-border-color: #ccc;
+      --border-color: lightgray;
     }
 
     body {
@@ -32,7 +30,6 @@
       align-items: center;
       min-height: 100vh;
       box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s;
     }
 
     nav {
@@ -40,7 +37,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      border-bottom: 1px solid var(--nav-border-color);
+      border-bottom: 1px solid var(--border-color);
       background-color: var(--bg-color);
       padding: 10px 0;
       display: flex;
@@ -56,6 +53,18 @@
 
     nav a:hover {
       text-decoration: underline;
+    }
+
+    .mode-toggle {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 0.9rem;
+      background: none;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      padding: 5px 10px;
+      cursor: pointer;
     }
 
     #content-box {
@@ -99,30 +108,18 @@
 
     .footer {
       font-size: 0.9rem;
-      color: var(--footer-color);
+      color: var(--border-color);
       text-align: center;
       margin-top: auto;
       padding-bottom: 20px;
     }
 
     .footer a {
-      color: var(--footer-color);
+      color: var(--border-color);
     }
 
     .footer a:hover {
-      color: lightgray;
-    }
-
-    .mode-toggle {
-      position: absolute;
-      top: 12px;
-      right: 20px;
-      background: none;
-      border: 1px solid var(--text-color);
-      color: var(--text-color);
-      padding: 5px 10px;
-      cursor: pointer;
-      font-family: inherit;
+      color: var(--link-color);
     }
 
     @media (max-width: 600px) {
@@ -147,13 +144,12 @@
   </style>
 </head>
 <body>
-
   <nav>
     <a href="/">Home</a>
     <a href="/resources">Resources</a>
     <a href="/about">About</a>
+    <button class="mode-toggle" onclick="toggleMode()">Toggle Mode</button>
   </nav>
-  <button class="mode-toggle" onclick="toggleMode()">Toggle Mode</button>
 
   <div class="search-container">
     <p>Incorrect area? Please enter your area name to search:</p>
@@ -167,12 +163,16 @@
   </div>
 
   <p class="footer">
-    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
+    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
   </p>
 
   <script>
     let detectedCountry = "";
     let detectedRegion = "";
+
+    function toggleMode() {
+      document.body.classList.toggle("light");
+    }
 
     async function getLocation() {
       try {
@@ -190,56 +190,49 @@
     function searchLocation() {
       let userInput = document.getElementById("manual-input").value.trim();
       if (!userInput) return alert("Please enter a location.");
+
       userInput = capitalizeWords(userInput);
-      let correctedName = findClosestMatch(userInput);
-      if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
-        document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
-        userInput = capitalizeWords(correctedName);
-      } else {
-        document.getElementById("suggestion").textContent = "";
-      }
+      let corrected = findClosestMatch(userInput);
 
-      const isCountry = validCountries.includes(userInput);
-      const isRegion = validStates.includes(userInput);
+      document.getElementById("suggestion").textContent =
+        corrected && corrected.toLowerCase() !== userInput.toLowerCase()
+          ? `Did you mean: ${corrected}?`
+          : "";
 
-      if (isCountry) {
-        searchFiles(userInput, userInput);
-      } else if (isRegion) {
-        searchFiles(userInput, "United States");
-      } else {
-        updateDisplay(`No data available for "${userInput}".`);
-      }
+      const isCountry = validCountries.includes(corrected);
+      const isRegion = validStates.includes(corrected);
+
+      if (isCountry) searchFiles(corrected, corrected);
+      else if (isRegion) searchFiles(corrected, "United States");
+      else updateDisplay(`No data available for "${userInput}".`);
     }
 
     async function searchFiles(region, country) {
-      let filePath = country === "United States" ? `United States/${region}.txt` : `${country}/${country}.txt`;
+      let path = country === "United States" ? `United States/${region}.txt` : `${country}/${country}.txt`;
+
       try {
-        const response = await fetch(filePath);
-        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) throw new Error("File not found");
-        const text = await response.text();
+        const res = await fetch(path);
+        if (!res.ok || res.headers.get("Content-Type").includes("text/html")) throw new Error();
+        const text = await res.text();
         updateDisplay(formatText(text.trim()));
       } catch {
         if (country === "United States") {
           try {
             const fallback = await fetch("United States/USA.txt");
-            const fallbackText = await fallback.text();
-            updateDisplay(`Your state either isn't currently supported, or lacks resources. Listed below are your location's national resources:\n\n${formatText(fallbackText.trim())}`);
+            const text = await fallback.text();
+            updateDisplay(`Your state either isn't currently supported, or lacks resources. Listed below are your location's national resources:\n\n${formatText(text.trim())}`);
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
         } else {
           try {
-            const fallbackJson = await fetch("NotSupported.json");
-            const data = await fallbackJson.json();
+            const fallback = await fetch("NotSupported.json");
+            const data = await fallback.json();
             if (data[country]) {
               let info = `Your country either isn't currently supported, or lacks resources. Listed below are your location's national resources:\n\n`;
-              for (let key in data[country]) {
-                info += `${key}: ${data[country][key]}\n`;
-              }
+              for (let key in data[country]) info += `${key}: ${data[country][key]}\n`;
               updateDisplay(info.trim());
-            } else {
-              updateDisplay(`No fallback data for ${country}.");
-            }
+            } else updateDisplay(`No fallback data for ${country}.`);
           } catch {
             updateDisplay("Error loading fallback emergency contacts.");
           }
@@ -252,39 +245,32 @@
     }
 
     function capitalizeWords(str) {
-      return str.toLowerCase().split(" ").filter(Boolean).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+      return str.toLowerCase().split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
     }
 
     function formatText(text) {
-      return text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>')
-                 .replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => `<a href="${url.startsWith('www.') ? 'http://' + url : url}" target="_blank">${url}</a>`);
+      text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
+      text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => `<a href="${url.startsWith('www.') ? 'http://' + url : url}" target="_blank">${url}</a>`);
+      return text;
     }
 
     function findClosestMatch(input) {
-      let closestMatch = "";
-      let shortestDistance = Infinity;
-      const all = [...validStates, ...validCountries];
-      all.forEach(location => {
-        let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
-        if (distance < shortestDistance) {
-          shortestDistance = distance;
-          closestMatch = location;
-        }
+      let closest = "", dist = Infinity;
+      [...validStates, ...validCountries].forEach(loc => {
+        let d = levenshteinDistance(input.toLowerCase(), loc.toLowerCase());
+        if (d < dist) { dist = d; closest = loc; }
       });
-      return shortestDistance <= 2 ? closestMatch : "";
+      return dist <= 2 ? closest : input;
     }
 
     function levenshteinDistance(a, b) {
       const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
-        Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-      );
+        Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+
       for (let i = 1; i <= a.length; i++) {
         for (let j = 1; j <= b.length; j++) {
-          matrix[i][j] = a[i - 1] === b[j - 1] ? matrix[i - 1][j - 1] : Math.min(
-            matrix[i - 1][j] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j - 1] + 1
-          );
+          matrix[i][j] = a[i - 1] === b[j - 1] ? matrix[i - 1][j - 1] :
+            Math.min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j - 1] + 1);
         }
       }
       return matrix[a.length][b.length];
@@ -293,10 +279,6 @@
     const validStates = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
 
     const validCountries = ["United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany", "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"];
-
-    function toggleMode() {
-      document.body.classList.toggle("light-mode");
-    }
 
     getLocation();
   </script>
