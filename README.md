@@ -15,21 +15,6 @@ The site is based off of basic IP geolocation, based on your state from your IP,
 This site is open source, and will stay open source. Resources by state/country can be found in the appropriate folders.
 
 
-41/50 states are active right now except:
-
-South Carolina\
-South Dakota\
-Tennessee\
-Texas\
-Utah\
-Vermont\
-Virginia\
-Washington\
-West Virginia\
-Wisconsin\
-Wyoming
-
-
 
 
 ## Acknowledgements
@@ -39,3 +24,23 @@ Wyoming
  - ChatGPT
     - Look, I can code, but not this well. ChatGPT as stupid as it sounds helped with quite a bit of code and translate a lot of garbage I wrote in python into HTML/JS.
  
+## USA - Advocate for Change
+
+All 50 states are active and on the site, however, the following states do NOT have their own program suicide prevention program, and just list national resources rather than their own:
+
+Florida
+Georgia
+Hawaii
+Idaho
+Illinois
+Inddiana
+Kentucky
+Louisiana
+Mississipi
+Ohio
+Oklahoma
+Oregon
+South Dakota
+
+
+For those who live in those states: email or call your state representatives and senators, talk to local school counselors, principals, or district officials about adding or improving mental health programs, attend city hall meetings and speak about making a change. **(37) THIRTY SEVEN** states have some level of in-state program, these 13 (as of writing, 3/21/2025), do not.
