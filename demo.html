@@ -62,7 +62,7 @@
     <p id="suggestion" style="color: yellow;"></p>
 
     <!-- Footer -->
-    <p class="footer">In memory of Josh, created by Elijah Segers and Maddie Andros</p>
+    <p class="footer">In memory of Joshua "Jeremiah" Blackledge, created by Elijah Segers and Maddie Andros</p>
 
     <script>
         let detectedCountry = "";
@@ -70,29 +70,20 @@
 
         async function getLocation() {
             try {
-                // Fetch user location data from a free API
                 const response = await fetch('https://ipwhois.app/json/');
                 const data = await response.json();
-
-                // Print the full API response to the console
                 console.log("Full API Response:", data);
 
-                // Extract the detected country and region
                 detectedCountry = data.country;
                 detectedRegion = data.region;
 
-                // Display the confirmation message
                 document.getElementById("state-display").textContent = `${capitalizeFirstLetter(detectedRegion)} CONFIRMED`;
-
-                // Hide "Detecting Your Location..." smoothly
                 document.getElementById("location-title").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("location-title").style.display = "none";
                 }, 500);
 
-                // Try to load a location file based on detected country & region
                 searchFiles(detectedRegion, detectedCountry);
-
             } catch (error) {
                 console.error("Error fetching location:", error);
                 document.getElementById("state-display").textContent = "Error fetching location.";
@@ -100,22 +91,22 @@
         }
 
         function searchLocation() {
-            let userInput = capitalizeFirstLetter(document.getElementById("manual-input").value.trim());
+            let userInput = document.getElementById("manual-input").value.trim();
             if (!userInput) {
                 alert("Please enter a location.");
                 return;
             }
 
-            // Check for spelling mistakes and suggest the closest match
+            // Capitalize and auto-correct input
+            userInput = capitalizeFirstLetter(userInput);
             let correctedName = findClosestMatch(userInput);
             if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
                 document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
-                userInput = capitalizeFirstLetter(correctedName); // Auto-correct input with capitalization
+                userInput = capitalizeFirstLetter(correctedName);
             } else {
                 document.getElementById("suggestion").textContent = "";
             }
 
-            // Try to load the file based on corrected user input
             searchFiles(userInput, detectedCountry || "Global");
         }
 
@@ -124,43 +115,31 @@
 
             try {
                 const response = await fetch(folderPath);
-
-                // Check if the response is valid and not an HTML file
                 if (!response.ok || response.headers.get("Content-Type").includes("text/html")) {
                     throw new Error("File not found");
                 }
 
-                // Read the file contents and format it properly
                 const text = await response.text();
                 document.getElementById("state-display").innerHTML = formatText(text.trim());
-
             } catch (error) {
                 console.warn(`File not found for ${region}, showing fallback message.`);
                 document.getElementById("state-display").textContent = `No data available for ${region}.`;
             }
         }
 
-        // Function to capitalize the first letter of a word
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         }
 
-        // Function to format text: makes phone numbers and URLs clickable
         function formatText(text) {
-            // Convert phone numbers into clickable links
-            text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, 
-                '<a href="tel:$&">$&</a>');
-
-            // Convert URLs into clickable links
+            text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
             text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, function(url) {
                 let formattedUrl = url.startsWith("www.") ? "http://" + url : url;
                 return `<a href="${formattedUrl}" target="_blank">${url}</a>`;
             });
-
             return text;
         }
 
-        // Function to find the closest match for spell-checking
         function findClosestMatch(input) {
             let closestMatch = "";
             let shortestDistance = Infinity;
@@ -176,7 +155,6 @@
             return shortestDistance <= 2 ? closestMatch : "";
         }
 
-        // Levenshtein Distance Algorithm (calculates similarity between strings)
         function levenshteinDistance(a, b) {
             const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
                 Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
@@ -193,6 +171,18 @@
 
             return matrix[a.length][b.length];
         }
+
+        const validLocations = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+            "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
+            "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+            "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+            "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
+            "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
+        ];
 
         getLocation();
     </script>
