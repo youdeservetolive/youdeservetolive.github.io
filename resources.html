@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>YDTL.</title>
   <style>
     body {
@@ -20,9 +20,33 @@
       box-sizing: border-box;
     }
 
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: black;
+      border-bottom: 1px solid gray;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      z-index: 999;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
     h1 {
       font-size: 2rem;
-      margin-top: 40px;
+      margin-top: 80px;
     }
 
     p {
@@ -88,22 +112,37 @@
     }
 
     @media (max-width: 600px) {
+      nav {
+        gap: 20px;
+        font-size: 0.9rem;
+      }
+
       h1 {
         font-size: 1.5rem;
       }
+
       p, input, button {
         font-size: 1rem;
       }
+
       input {
         width: 200px;
       }
+
       .footer {
-        white-space: normal; /* Allow wrapping on very small screens */
+        white-space: normal;
       }
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/resources">Resources</a>
+    <a href="/about">About</a>
+  </nav>
+
   <div id="content-box">
     <p id="state-display">Fetching IP info...</p>
     <div class="separator"></div>
