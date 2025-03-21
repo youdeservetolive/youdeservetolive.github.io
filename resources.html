@@ -176,9 +176,7 @@
     }
 
     function formatText(text) {
-      // Make phone numbers clickable
       text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
-      // Make URLs clickable
       text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, function (url) {
         let formattedUrl = url.startsWith("www.") ? "http://" + url : url;
         return `<a href="${formattedUrl}" target="_blank">${url}</a>`;
@@ -234,7 +232,6 @@
       "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
     ];
 
-    // Start detection on page load
     getLocation();
   </script>
 </body>
