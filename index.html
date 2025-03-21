@@ -16,16 +16,7 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      overflow: hidden;
-    }
-
-    .fade {
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    .visible {
-      opacity: 1;
+      padding: 20px;
     }
 
     h1 {
@@ -36,14 +27,6 @@
     p {
       font-size: 1rem;
       margin: 5px;
-    }
-
-    .bottom-border {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      border-top: 1px solid white;
-      padding: 10px 0;
     }
 
     .button-link {
@@ -61,6 +44,24 @@
       opacity: 0.7;
     }
 
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: gray;
+      text-align: center;
+      width: 100%;
+    }
+
+    .footer a {
+      color: gray;
+      text-decoration: underline;
+    }
+
+    .footer a:hover {
+      color: lightgray;
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 1.2rem;
@@ -72,26 +73,16 @@
   </style>
 </head>
 <body>
-  <div id="message1" class="visible">
-    <h1>You deserve to live.</h1>
-  </div>
+  <h1>You matter.</h1>
+  <p><em>you. deserve. to. live.</em></p>
+  <button class="button-link" onclick="location.href='/resources'">Find Resources</button>
 
-  <div id="message2" class="fade">
-    <h1>You matter. People love you and people are there for you.</h1>
-    <p><em>you. deserve. to. live.</em></p>
-    <button class="button-link" onclick="location.href='/resources'">Find Resources</button>
-  </div>
-
-  <p class="footer">In memory of Joshua Blackledge, created by Elijah Segers and Maddie Andros</p>
-
-  <script>
-    setTimeout(() => {
-      document.getElementById("message1").classList.remove("visible");
-      document.getElementById("message1").classList.add("fade");
-
-      document.getElementById("message2").classList.remove("fade");
-      document.getElementById("message2").classList.add("visible");
-    }, 1000);
-  </script>
+  <p class="footer">
+    In memory of
+    <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">
+      Joshua Blackledge
+    </a>
+    — created by Elijah Segers and Maddie Andros
+  </p>
 </body>
 </html>
