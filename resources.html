@@ -8,14 +8,12 @@
     :root {
       --bg-color: black;
       --text-color: white;
-      --link-color: lightblue;
       --border-color: gray;
     }
 
     body.light {
       --bg-color: white;
       --text-color: black;
-      --link-color: blue;
       --border-color: #ccc;
     }
 
@@ -30,11 +28,11 @@
       align-items: center;
       min-height: 100vh;
       box-sizing: border-box;
-      transition: background 0.3s, color 0.3s;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     nav {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -46,6 +44,12 @@
       align-items: center;
       font-size: 0.95rem;
       z-index: 1000;
+    }
+
+    .nav-wrapper {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
     }
 
     .nav-links {
@@ -70,24 +74,8 @@
       color: var(--text-color);
     }
 
-    #content-box {
-      margin-top: 100px;
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-    }
-
-    #state-display {
-      font-size: 1.2rem;
-      white-space: pre-line;
-      padding: 10px;
-    }
-
     .search-container {
-      margin-top: 20px;
+      margin-top: 100px;
       text-align: center;
     }
 
@@ -103,8 +91,24 @@
       cursor: pointer;
     }
 
+    #content-box {
+      margin-top: 20px;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    #state-display {
+      font-size: 1.2rem;
+      white-space: pre-line;
+      padding: 10px;
+    }
+
     a {
-      color: var(--link-color);
+      color: lightblue;
       text-decoration: underline;
       word-break: break-word;
     }
@@ -119,6 +123,7 @@
 
     .footer a {
       color: gray;
+      text-decoration: underline;
     }
 
     .footer a:hover {
@@ -146,12 +151,13 @@
   </style>
 </head>
 <body>
-
   <nav>
-    <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/resources">Resources</a>
-      <a href="/about">About</a>
+    <div class="nav-wrapper">
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/resources">Resources</a>
+        <a href="/about">About</a>
+      </div>
     </div>
     <button class="toggle-btn" onclick="toggleMode()" title="Toggle light/dark mode">🌙</button>
   </nav>
@@ -239,7 +245,7 @@
           try {
             const fallback = await fetch("United States/USA.txt");
             const fallbackText = await fallback.text();
-            updateDisplay(`"${region}" wasn't in our records, so here is the general information for ${country}:\n\n` + formatText(fallbackText.trim()));
+            updateDisplay(`"${region}" wasn't in our records, so here is the general information for United States.\n\n` + formatText(fallbackText.trim()));
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
@@ -247,6 +253,7 @@
           try {
             const fallbackJson = await fetch("NotSupported.json");
             const data = await fallbackJson.json();
+
             if (data[country]) {
               let info = `"${region}" wasn't in our records, so here is the general information for ${country}:\n\n`;
               for (let key in data[country]) {
@@ -289,6 +296,7 @@
       let closestMatch = "";
       let shortestDistance = Infinity;
       const all = [...validStates, ...validCountries];
+
       all.forEach(location => {
         let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
         if (distance < shortestDistance) {
@@ -296,6 +304,7 @@
           closestMatch = location;
         }
       });
+
       return shortestDistance <= 2 ? closestMatch : "";
     }
 
@@ -303,6 +312,7 @@
       const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
         Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
       );
+
       for (let i = 1; i <= a.length; i++) {
         for (let j = 1; j <= b.length; j++) {
           matrix[i][j] =
@@ -315,18 +325,30 @@
                 );
         }
       }
+
       return matrix[a.length][b.length];
     }
 
     function toggleMode() {
-      const body = document.body;
-      const btn = document.querySelector('.toggle-btn');
-      body.classList.toggle('light');
-      btn.textContent = body.classList.contains('light') ? '☀️' : '🌙';
+      document.body.classList.toggle("light");
+      const btn = document.querySelector(".toggle-btn");
+      btn.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
     }
 
-    const validStates = [/* US states */];
-    const validCountries = [/* Countries supported */];
+    const validStates = [
+      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+      "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+      "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+      "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+      "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
+      "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+      "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+    ];
+
+    const validCountries = [
+      "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
+      "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
+    ];
 
     getLocation();
   </script>
