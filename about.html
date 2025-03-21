@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | YDTL</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: "Courier New", Courier, monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav {
+      width: 100%;
+      border-bottom: 1px solid gray;
+      background-color: black;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      font-size: 0.95rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      max-width: 1000px;
+      flex-wrap: wrap;
+    }
+
+    .photo {
+      flex: 1 1 200px;
+      margin-right: 20px;
+    }
+
+    .photo img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 8px;
+    }
+
+    .content {
+      flex: 2 1 400px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .footer {
+      font-size: 0.85rem;
+      color: gray;
+      text-align: center;
+      margin-top: auto;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .photo {
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/resources">Resources</a>
+    <a href="/about">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="photo">
+      <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/485000101_962206192757405_4977742977500037645_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=MoonExRdl3gQ7kNvgHlXMbt&_nc_oc=AdnsbaGp1BHsduK_BMfEHoZlNXucphqZzkU7NX1or75VDxaKIoGzd-GUx2_MBU2gjXg&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=ht2yZppnZO6U9AtTy5oTwQ&oh=00_AYFk4lE1RijldapqmwMl8_mhu-ekvjjnybvxJ5hs3S1b2Q&oe=67E34BFB" alt="Joshua Blackledge">
+    </div>
+    <div class="content">
+      <p>
+        This site was created in honor of Joshua Blackledge. Joshua, known as Josh, and "mommyjoshua" and "f30joshh" on TikTok, took his own life 3/18/2025.
+      </p>
+      <p>
+        Mental health is a difficult topic, for everyone, and the purpose of this site is to open up that conversation a little, primarily focusing on suicide prevention. Resources aren't lacking, but are typically a little complicated to find. This site removes that barrier, and gives you resources directly based on where you are.
+      </p>
+      <p>
+        When you visit the resources page, the site uses your IP to see your state and country (WE DO NOT STORE THIS DATA.), and show information based on your location. You can look up states (limited to the US), and countries. 
+      </p>
+      <p>
+        Thank you to the following contributors who helped build this site, as well as helped share it during the beginning stages:
+      </p>
+      <p>[Missing thankstoyall.txt content]</p>
+    </div>
+  </div>
+
+  <p class="footer">
+    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
+  </p>
+</body>
+</html>
