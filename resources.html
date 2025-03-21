@@ -21,7 +21,6 @@
 
     h1 {
       font-size: 2rem;
-      transition: opacity 0.5s ease-in-out;
       margin-top: 40px;
     }
 
@@ -60,7 +59,7 @@
     }
 
     .footer {
-      margin-top: 30px;
+      margin-top: auto;
       font-size: 1rem;
       color: gray;
       text-align: center;
@@ -99,10 +98,13 @@
   <p id="suggestion" style="color: yellow;"></p>
   
   <p class="footer">
-      In memory of
-      <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
-    </p>
-    <script>
+    In memory of
+    <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">
+      Joshua Blackledge
+    </a> — created by Elijah Segers and Maddie Andros
+  </p>
+
+  <script>
     let detectedCountry = "";
     let detectedRegion = "";
 
@@ -116,11 +118,6 @@
         detectedRegion = data.region;
 
         updateDisplay(`${capitalizeWords(detectedRegion)} CONFIRMED`);
-        document.getElementById("location-title").style.opacity = "0";
-        setTimeout(() => {
-          document.getElementById("location-title").style.display = "none";
-        }, 500);
-
         searchFiles(detectedRegion, detectedCountry);
       } catch (error) {
         console.error("Error fetching location:", error);
@@ -179,7 +176,9 @@
     }
 
     function formatText(text) {
+      // Make phone numbers clickable
       text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
+      // Make URLs clickable
       text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, function (url) {
         let formattedUrl = url.startsWith("www.") ? "http://" + url : url;
         return `<a href="${formattedUrl}" target="_blank">${url}</a>`;
@@ -235,6 +234,7 @@
       "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
     ];
 
+    // Start detection on page load
     getLocation();
   </script>
 </body>
