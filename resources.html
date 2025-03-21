@@ -17,6 +17,7 @@
       min-height: 100vh;
       margin: 0;
       padding: 20px;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -59,12 +60,14 @@
     }
 
     .footer {
-      position: absolute;
-      bottom: 10px;
       font-size: 0.9rem;
       color: gray;
       text-align: center;
-      width: 100%;
+      margin-top: auto;
+      padding-top: 30px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .footer a {
@@ -94,6 +97,9 @@
       input {
         width: 200px;
       }
+      .footer {
+        white-space: normal; /* Allow wrapping on very small screens */
+      }
     }
   </style>
 </head>
@@ -107,7 +113,7 @@
   <input type="text" id="manual-input" placeholder="Enter state or country" />
   <button onclick="searchLocation()">Search</button>
   <p id="suggestion" style="color: yellow;"></p>
-  
+
   <p class="footer">
     In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Josh</a> — created by Elijah Segers and Maddie Andros
   </p>
@@ -122,10 +128,10 @@
         const data = await response.json();
         console.log("Full API Response:", data);
 
-        detectedCountry = data.country;
-        detectedRegion = data.region;
+        detectedCountry = capitalizeWords(data.country);
+        detectedRegion = capitalizeWords(data.region);
 
-        updateDisplay(`${capitalizeWords(detectedRegion)} CONFIRMED`);
+        updateDisplay(`${detectedRegion} CONFIRMED`);
         searchFiles(detectedRegion, detectedCountry);
       } catch (error) {
         console.error("Error fetching location:", error);
@@ -141,8 +147,8 @@
       }
 
       userInput = capitalizeWords(userInput);
-
       let correctedName = findClosestMatch(userInput);
+
       if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
         document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
         userInput = capitalizeWords(correctedName);
@@ -150,7 +156,16 @@
         document.getElementById("suggestion").textContent = "";
       }
 
-      searchFiles(userInput, detectedCountry || "Global");
+      const isCountry = validCountries.includes(userInput);
+      const isRegion = validStates.includes(userInput);
+
+      if (isCountry) {
+        searchFiles(userInput, userInput);
+      } else if (isRegion) {
+        searchFiles(userInput, "United States");
+      } else {
+        updateDisplay(`No data available for "${userInput}".`);
+      }
     }
 
     async function searchFiles(region, country) {
@@ -195,8 +210,9 @@
     function findClosestMatch(input) {
       let closestMatch = "";
       let shortestDistance = Infinity;
+      const all = [...validStates, ...validCountries];
 
-      validLocations.forEach(location => {
+      all.forEach(location => {
         let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
         if (distance < shortestDistance) {
           shortestDistance = distance;
@@ -228,14 +244,17 @@
       return matrix[a.length][b.length];
     }
 
-    const validLocations = [
+    const validStates = [
       "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
       "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
       "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
       "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
       "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
       "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-      "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+      "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+    ];
+
+    const validCountries = [
       "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
       "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
     ];
