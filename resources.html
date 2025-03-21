@@ -2,12 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resources | YDTL</title>
   <style>
+    :root {
+      --bg-color: black;
+      --text-color: white;
+      --link-color: lightblue;
+      --footer-color: gray;
+      --nav-border-color: gray;
+    }
+
+    body.light-mode {
+      --bg-color: white;
+      --text-color: black;
+      --link-color: blue;
+      --footer-color: #555;
+      --nav-border-color: #ccc;
+    }
+
     body {
-      background-color: black;
-      color: white;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: "Courier New", Courier, monospace;
       margin: 0;
       padding: 20px;
@@ -16,6 +32,7 @@
       align-items: center;
       min-height: 100vh;
       box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     nav {
@@ -23,8 +40,8 @@
       top: 0;
       left: 0;
       width: 100%;
-      border-bottom: 1px solid gray;
-      background-color: black;
+      border-bottom: 1px solid var(--nav-border-color);
+      background-color: var(--bg-color);
       padding: 10px 0;
       display: flex;
       justify-content: center;
@@ -33,7 +50,7 @@
     }
 
     nav a {
-      color: white;
+      color: var(--text-color);
       text-decoration: none;
     }
 
@@ -75,26 +92,37 @@
     }
 
     a {
-      color: lightblue;
+      color: var(--link-color);
       text-decoration: underline;
       word-break: break-word;
     }
 
     .footer {
       font-size: 0.9rem;
-      color: gray;
+      color: var(--footer-color);
       text-align: center;
       margin-top: auto;
       padding-bottom: 20px;
     }
 
     .footer a {
-      color: gray;
-      text-decoration: underline;
+      color: var(--footer-color);
     }
 
     .footer a:hover {
       color: lightgray;
+    }
+
+    .mode-toggle {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      background: none;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: inherit;
     }
 
     @media (max-width: 600px) {
@@ -125,6 +153,7 @@
     <a href="/resources">Resources</a>
     <a href="/about">About</a>
   </nav>
+  <button class="mode-toggle" onclick="toggleMode()">Toggle Mode</button>
 
   <div class="search-container">
     <p>Incorrect area? Please enter your area name to search:</p>
@@ -138,7 +167,7 @@
   </div>
 
   <p class="footer">
-    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
+    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
   </p>
 
   <script>
@@ -160,14 +189,9 @@
 
     function searchLocation() {
       let userInput = document.getElementById("manual-input").value.trim();
-      if (!userInput) {
-        alert("Please enter a location.");
-        return;
-      }
-
+      if (!userInput) return alert("Please enter a location.");
       userInput = capitalizeWords(userInput);
       let correctedName = findClosestMatch(userInput);
-
       if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
         document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
         userInput = capitalizeWords(correctedName);
@@ -188,20 +212,10 @@
     }
 
     async function searchFiles(region, country) {
-      let filePath = "";
-
-      if (country === "United States") {
-        filePath = `United States/${region}.txt`;
-      } else {
-        filePath = `${country}/${country}.txt`;
-      }
-
+      let filePath = country === "United States" ? `United States/${region}.txt` : `${country}/${country}.txt`;
       try {
         const response = await fetch(filePath);
-        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) {
-          throw new Error("File not found");
-        }
-
+        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) throw new Error("File not found");
         const text = await response.text();
         updateDisplay(formatText(text.trim()));
       } catch {
@@ -209,7 +223,7 @@
           try {
             const fallback = await fetch("United States/USA.txt");
             const fallbackText = await fallback.text();
-            updateDisplay(formatText(fallbackText.trim()));
+            updateDisplay(`Your state either isn't currently supported, or lacks resources. Listed below are your location's national resources:\n\n${formatText(fallbackText.trim())}`);
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
@@ -217,15 +231,14 @@
           try {
             const fallbackJson = await fetch("NotSupported.json");
             const data = await fallbackJson.json();
-
             if (data[country]) {
-              let info = `Emergency contacts for ${country}:\n`;
+              let info = `Your country either isn't currently supported, or lacks resources. Listed below are your location's national resources:\n\n`;
               for (let key in data[country]) {
                 info += `${key}: ${data[country][key]}\n`;
               }
               updateDisplay(info.trim());
             } else {
-              updateDisplay(`No fallback data for ${country}.`);
+              updateDisplay(`No fallback data for ${country}.");
             }
           } catch {
             updateDisplay("Error loading fallback emergency contacts.");
@@ -239,28 +252,18 @@
     }
 
     function capitalizeWords(str) {
-      return str
-        .toLowerCase()
-        .split(" ")
-        .filter(word => word.length > 0)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+      return str.toLowerCase().split(" ").filter(Boolean).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
     }
 
     function formatText(text) {
-      text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
-      text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => {
-        const fixedUrl = url.startsWith("www.") ? "http://" + url : url;
-        return `<a href="${fixedUrl}" target="_blank">${url}</a>`;
-      });
-      return text;
+      return text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>')
+                 .replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => `<a href="${url.startsWith('www.') ? 'http://' + url : url}" target="_blank">${url}</a>`);
     }
 
     function findClosestMatch(input) {
       let closestMatch = "";
       let shortestDistance = Infinity;
       const all = [...validStates, ...validCountries];
-
       all.forEach(location => {
         let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
         if (distance < shortestDistance) {
@@ -268,7 +271,6 @@
           closestMatch = location;
         }
       });
-
       return shortestDistance <= 2 ? closestMatch : "";
     }
 
@@ -276,37 +278,25 @@
       const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
         Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
       );
-
       for (let i = 1; i <= a.length; i++) {
         for (let j = 1; j <= b.length; j++) {
-          matrix[i][j] =
-            a[i - 1] === b[j - 1]
-              ? matrix[i - 1][j - 1]
-              : Math.min(
-                  matrix[i - 1][j] + 1,
-                  matrix[i][j - 1] + 1,
-                  matrix[i - 1][j - 1] + 1
-                );
+          matrix[i][j] = a[i - 1] === b[j - 1] ? matrix[i - 1][j - 1] : Math.min(
+            matrix[i - 1][j] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j - 1] + 1
+          );
         }
       }
-
       return matrix[a.length][b.length];
     }
 
-    const validStates = [
-      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-      "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-      "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-      "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-      "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-      "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-      "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-    ];
+    const validStates = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
 
-    const validCountries = [
-      "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany",
-      "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"
-    ];
+    const validCountries = ["United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany", "Italy", "Spain", "China", "Japan", "India", "Russia", "South Africa", "Australia"];
+
+    function toggleMode() {
+      document.body.classList.toggle("light-mode");
+    }
 
     getLocation();
   </script>
