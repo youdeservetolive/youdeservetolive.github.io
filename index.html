@@ -1,33 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Loving Memory</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: "Courier New", Courier, monospace;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        h1 {
-            font-size: 1.5rem;
-        }
-        p {
-            font-size: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YDTL.</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: "Courier New", Courier, monospace;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .fade {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 10px;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 5px;
+    }
+
+    .bottom-border {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      border-top: 1px solid white;
+      padding: 10px 0;
+    }
+
+    .button-link {
+      background: none;
+      border: none;
+      color: white;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1rem;
+      margin-top: 20px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .button-link:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+      p, .button-link {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>In Loving Memory of Joshua Blackledge</h1>
-    <p>Forever 16</p>
-    <p>site active soon...</p>
+  <div id="message1" class="visible">
+    <h1>You deserve to live.</h1>
+  </div>
+
+  <div id="message2" class="fade">
+    <h1>You matter. People love you and people are there for you.</h1>
+    <p><em>you. deserve. to. live.</em></p>
+    <button class="button-link" onclick="location.href='/resources'">Find Resources</button>
+  </div>
+
+  <p class="footer">In memory of Joshua Blackledge, created by Elijah Segers and Maddie Andros</p>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById("message1").classList.remove("visible");
+      document.getElementById("message1").classList.add("fade");
+
+      document.getElementById("message2").classList.remove("fade");
+      document.getElementById("message2").classList.add("visible");
+    }, 1000);
+  </script>
 </body>
 </html>
