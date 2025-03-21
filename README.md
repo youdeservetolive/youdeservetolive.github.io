@@ -27,7 +27,15 @@ Virginia\
 Washington\
 West Virginia\
 Wisconsin\
-Wyoming\
+Wyoming
 
 
 
+
+## Acknowledgements
+- [Maddie Andros](https://instagram.com/unmaddiee)
+    - She helped collect the resources for every state, and all countries. Couldn't have done this without her.
+
+ - ChatGPT
+    - Look, I can code, but not this well. ChatGPT as stupid as it sounds helped with quite a bit of code and translate a lot of garbage I wrote in python into HTML/JS.
+ 
