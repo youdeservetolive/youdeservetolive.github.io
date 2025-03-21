@@ -19,19 +19,22 @@
     }
 
     nav {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      border-bottom: 1px solid gray;
+      background-color: black;
+      padding: 10px 0;
       display: flex;
       justify-content: center;
-      border-bottom: 1px solid white;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+      gap: 40px;
+      font-size: 0.95rem;
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
     }
 
     nav a:hover {
@@ -39,6 +42,7 @@
     }
 
     #content-box {
+      margin-top: 100px;
       flex-grow: 1;
       display: flex;
       justify-content: center;
@@ -54,7 +58,7 @@
     }
 
     .search-container {
-      margin-bottom: 20px;
+      margin-top: 20px;
       text-align: center;
     }
 
@@ -81,6 +85,7 @@
       color: gray;
       text-align: center;
       margin-top: auto;
+      padding-bottom: 20px;
     }
 
     .footer a {
@@ -93,6 +98,12 @@
     }
 
     @media (max-width: 600px) {
+      nav {
+        gap: 20px;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+      }
+
       #state-display {
         font-size: 1rem;
       }
@@ -101,20 +112,14 @@
         width: 90%;
       }
 
-      nav {
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-      }
-
       .footer {
         font-size: 0.8rem;
-        padding-bottom: 20px;
       }
     }
   </style>
 </head>
 <body>
+
   <nav>
     <a href="/">Home</a>
     <a href="/resources">Resources</a>
@@ -210,20 +215,20 @@
           }
         } else {
           try {
-            const jsonFallback = await fetch("NotSupported.json");
-            const emergencyData = await jsonFallback.json();
+            const fallbackJson = await fetch("NotSupported.json");
+            const data = await fallbackJson.json();
 
-            if (emergencyData[country]) {
+            if (data[country]) {
               let info = `Emergency contacts for ${country}:\n`;
-              for (let key in emergencyData[country]) {
-                info += `${key}: ${emergencyData[country][key]}\n`;
+              for (let key in data[country]) {
+                info += `${key}: ${data[country][key]}\n`;
               }
               updateDisplay(info.trim());
             } else {
-              updateDisplay(`No data available for ${country}.`);
+              updateDisplay(`No fallback data for ${country}.`);
             }
           } catch {
-            updateDisplay("Could not load fallback emergency info.");
+            updateDisplay("Error loading fallback emergency contacts.");
           }
         }
       }
@@ -244,9 +249,9 @@
 
     function formatText(text) {
       text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
-      text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, function (url) {
-        let formattedUrl = url.startsWith("www.") ? "http://" + url : url;
-        return `<a href="${formattedUrl}" target="_blank">${url}</a>`;
+      text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => {
+        const fixedUrl = url.startsWith("www.") ? "http://" + url : url;
+        return `<a href="${fixedUrl}" target="_blank">${url}</a>`;
       });
       return text;
     }
