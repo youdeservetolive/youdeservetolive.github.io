@@ -46,23 +46,29 @@
             font-size: 1rem;
             color: gray;
         }
+        #content-box {
+            min-height: 50px;
+        }
     </style>
 </head>
 <body>
-    <h1 id="location-title">Detecting Your Location...</h1>
-    <p id="state-display">Fetching IP info...</p>
+    <!-- Location Box (Ensures Separator Stays After Search) -->
+    <div id="content-box">
+        <h1 id="location-title">Detecting Your Location...</h1>
+        <p id="state-display">Fetching IP info...</p>
+    </div>
 
-    <!-- Separator -->
+    <!-- Separator (Now Stays in Place) -->
     <div class="separator"></div>
 
     <!-- Search Input -->
-    <p>Incorrect area? Please enter your state/country name to search:</p>
+    <p>Incorrect area? Please enter your area name to search:</p>
     <input type="text" id="manual-input" placeholder="Enter state or country">
     <button onclick="searchLocation()">Search</button>
     <p id="suggestion" style="color: yellow;"></p>
 
     <!-- Footer -->
-    <p class="footer">In memory of Joshua "Jeremiah" Blackledge, created by Elijah Segers and Maddie Andros</p>
+    <p class="footer">In memory of Josh, created by Elijah Segers and Maddie Andros</p>
 
     <script>
         let detectedCountry = "";
@@ -77,7 +83,7 @@
                 detectedCountry = data.country;
                 detectedRegion = data.region;
 
-                document.getElementById("state-display").textContent = `${capitalizeFirstLetter(detectedRegion)} CONFIRMED`;
+                updateDisplay(`${capitalizeFirstLetter(detectedRegion)} CONFIRMED`);
                 document.getElementById("location-title").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("location-title").style.display = "none";
@@ -86,7 +92,7 @@
                 searchFiles(detectedRegion, detectedCountry);
             } catch (error) {
                 console.error("Error fetching location:", error);
-                document.getElementById("state-display").textContent = "Error fetching location.";
+                updateDisplay("Error fetching location.");
             }
         }
 
@@ -97,7 +103,6 @@
                 return;
             }
 
-            // Capitalize and auto-correct input
             userInput = capitalizeFirstLetter(userInput);
             let correctedName = findClosestMatch(userInput);
             if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
@@ -120,11 +125,15 @@
                 }
 
                 const text = await response.text();
-                document.getElementById("state-display").innerHTML = formatText(text.trim());
+                updateDisplay(formatText(text.trim()));
             } catch (error) {
                 console.warn(`File not found for ${region}, showing fallback message.`);
-                document.getElementById("state-display").textContent = `No data available for ${region}.`;
+                updateDisplay(`No data available for ${region}.`);
             }
+        }
+
+        function updateDisplay(text) {
+            document.getElementById("state-display").innerHTML = text;
         }
 
         function capitalizeFirstLetter(string) {
