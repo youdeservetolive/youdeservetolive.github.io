@@ -5,9 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>YDTL.</title>
   <style>
+    :root {
+      --bg-color: black;
+      --text-color: white;
+      --link-color: lightblue;
+      --footer-color: gray;
+      --highlight: white;
+    }
+
+    body.light-mode {
+      --bg-color: #fdfdfd;
+      --text-color: #111;
+      --link-color: #0077cc;
+      --footer-color: #555;
+      --highlight: black;
+    }
+
     body {
-      background-color: black;
-      color: white;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: "Courier New", Courier, monospace;
       text-align: center;
       display: flex;
@@ -17,6 +33,7 @@
       height: 100vh;
       margin: 0;
       padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     nav {
@@ -24,17 +41,19 @@
       top: 0;
       left: 0;
       width: 100%;
-      border-bottom: 1px solid gray;
-      background-color: black;
+      border-bottom: 1px solid var(--footer-color);
+      background-color: var(--bg-color);
       padding: 10px 0;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 40px;
       font-size: 0.95rem;
+      z-index: 10;
     }
 
     nav a {
-      color: white;
+      color: var(--text-color);
       text-decoration: none;
     }
 
@@ -42,18 +61,69 @@
       text-decoration: underline;
     }
 
+    .theme-toggle {
+      position: absolute;
+      right: 10px;
+      top: 12px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #777;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+
     .typewriter {
       font-size: 1.5rem;
       white-space: nowrap;
       overflow: hidden;
-      border-right: 2px solid white;
+      border-right: 2px solid var(--highlight);
       width: 0;
       animation: typing 1.2s steps(11, end) forwards, blink 0.6s step-end infinite;
     }
 
     @keyframes typing {
       from { width: 0 }
-      to { width: 11ch } /* "You matter." is 11 characters */
+      to { width: 11ch }
     }
 
     @keyframes blink {
@@ -68,7 +138,7 @@
     .button-link {
       background: none;
       border: none;
-      color: white;
+      color: var(--text-color);
       font-family: "Courier New", Courier, monospace;
       font-size: 1rem;
       margin-top: 20px;
@@ -84,24 +154,25 @@
       position: absolute;
       bottom: 10px;
       font-size: 0.9rem;
-      color: gray;
+      color: var(--footer-color);
       text-align: center;
       width: 100%;
     }
 
     .footer a {
-      color: gray;
+      color: var(--footer-color);
       text-decoration: underline;
     }
 
     .footer a:hover {
-      color: lightgray;
+      color: var(--link-color);
     }
 
     @media (max-width: 600px) {
       .typewriter {
         font-size: 1.2rem;
       }
+
       p, .button-link {
         font-size: 0.9rem;
       }
@@ -109,11 +180,24 @@
       nav {
         gap: 20px;
         font-size: 0.85rem;
+        flex-wrap: wrap;
+      }
+
+      .theme-toggle {
+        top: 8px;
+        right: 8px;
       }
     }
   </style>
 </head>
 <body>
+
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="modeSwitch" />
+      <span class="slider"></span>
+    </label>
+  </div>
 
   <nav>
     <a href="/">Home</a>
@@ -126,8 +210,14 @@
   <button class="button-link" onclick="location.href='/resources'">Find Resources</button>
 
   <p class="footer">
-     In memory of <a href="/about">Joshua Blackledge</a>
+    In memory of <a href="/about">Joshua Blackledge</a>
   </p>
 
+  <script>
+    const toggle = document.getElementById("modeSwitch");
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("light-mode");
+    });
+  </script>
 </body>
 </html>
