@@ -5,24 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About | YDTL</title>
   <style>
+    :root {
+      --bg-color: black;
+      --text-color: white;
+      --link-color: lightblue;
+      --border-color: gray;
+      --footer-color: gray;
+    }
+
+    body.light-mode {
+      --bg-color: #fefefe;
+      --text-color: #111;
+      --link-color: #0077cc;
+      --border-color: #ccc;
+      --footer-color: #555;
+    }
+
     body {
-      background-color: black;
-      color: white;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: "Courier New", Courier, monospace;
       margin: 0;
       padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     nav {
       width: 100%;
-      border-bottom: 1px solid gray;
-      background-color: black;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-color);
       padding: 10px 0;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 40px;
       font-size: 0.95rem;
       position: sticky;
@@ -31,12 +49,63 @@
     }
 
     nav a {
-      color: white;
+      color: var(--text-color);
       text-decoration: none;
     }
 
     nav a:hover {
       text-decoration: underline;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      right: 10px;
+      top: 12px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #777;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
     }
 
     .container {
@@ -66,25 +135,31 @@
       line-height: 1.6;
     }
 
+    .section {
+      margin-bottom: 30px;
+    }
+
     .footer {
       font-size: 0.85rem;
-      color: gray;
+      color: var(--footer-color);
       text-align: center;
       margin-top: auto;
       padding: 20px;
     }
 
     .footer a {
-      color: gray;
+      color: var(--footer-color);
       text-decoration: underline;
     }
 
     .footer a:hover {
-      color: lightgray;
+      color: var(--link-color);
     }
 
-    .spacer {
-      margin: 20px 0;
+    a.button-link {
+      color: var(--link-color);
+      text-decoration: underline;
+      font-weight: bold;
     }
 
     @media (max-width: 768px) {
@@ -93,14 +168,27 @@
         align-items: center;
         text-align: center;
       }
+
       .photo {
         margin-right: 0;
         margin-bottom: 20px;
+      }
+
+      .theme-toggle {
+        top: 8px;
+        right: 8px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="modeSwitch" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
   <nav>
     <a href="/">Home</a>
     <a href="/resources">Resources</a>
@@ -111,44 +199,48 @@
     <div class="photo">
       <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/485000101_962206192757405_4977742977500037645_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=MoonExRdl3gQ7kNvgHlXMbt&_nc_oc=AdnsbaGp1BHsduK_BMfEHoZlNXucphqZzkU7NX1or75VDxaKIoGzd-GUx2_MBU2gjXg&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=ht2yZppnZO6U9AtTy5oTwQ&oh=00_AYFk4lE1RijldapqmwMl8_mhu-ekvjjnybvxJ5hs3S1b2Q&oe=67E34BFB" alt="Joshua Blackledge">
     </div>
+
     <div class="content">
-      <p>
-        This site was created in honor of Joshua Blackledge. Joshua, known as Josh, and "mommyjoshua" and "f30joshh" on TikTok, took his own life 3/18/2025.
-      </p>
+      <section class="section" id="dedication">
+        <p>
+          This site was created in honor of Joshua Blackledge. Joshua, known as Josh, and "mommyjoshua" and "f30joshh" on TikTok, took his own life 3/18/2025.
+        </p>
+      </section>
 
-      <div class="spacer"></div>
+      <section class="section" id="information">
+        <p>
+          Mental health is a difficult topic, for everyone, and the purpose of this site is to open up that conversation a little, primarily focusing on suicide prevention. Resources aren't lacking, but are typically a little complicated to find. This site removes that barrier, and gives you resources directly based on where you are.
+        </p>
+        <p>
+          When you visit the resources page, the site uses your IP to see your state and country (WE DO NOT STORE THIS DATA.), and show information based on your location. You can look up states (limited to the US), and countries. 
+        </p>
+        <p>
+          View the full reference of all regions and countries we cover here:
+          <br />
+          <a href="/masterlist" class="button-link">Open the Master List</a>
+        </p>
+      </section>
 
-      <p>
-        Mental health is a difficult topic, for everyone, and the purpose of this site is to open up that conversation a little, primarily focusing on suicide prevention. Resources aren't lacking, but are typically a little complicated to find. This site removes that barrier, and gives you resources directly based on where you are.
-      </p>
-
-      <p>
-        When you visit the resources page, the site uses your IP to see your state and country (WE DO NOT STORE THIS DATA.), and show information based on your location. You can look up states (limited to the US), and countries. 
-      </p>
-
-      <div class="spacer"></div>
-
-      <p>
-        View the full reference of all regions and countries we cover here:
-        <br />
-        <a href="/masterlist" style="color: lightblue; text-decoration: underline; font-weight: bold;">Open the Master List</a>
-      </p>
-
-      <div class="spacer"></div>
-      <p></p>   
-      <p></p>  
-      <p>
-        Thank you to the following contributors who helped build this site, as well as helped share it during the beginning stages:
-      </p>
-      <p></p>  
-      <p>
-        Maddie Andros – helped collect resources from everywhere we support, as well as the sole creator of the Master List
-      </p>
+      <section class="section" id="thanks">
+        <p>
+          Thank you to the following contributors who helped build this site, as well as helped share it during the beginning stages:
+        </p>
+        <p>
+          Maddie Andros – helped collect resources from everywhere we support, as well as the sole creator of the Master List
+        </p>
+      </section>
     </div>
   </div>
 
   <p class="footer">
     In memory of <a href="/about">Joshua Blackledge</a>
   </p>
+
+  <script>
+    const toggle = document.getElementById("modeSwitch");
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("light-mode");
+    });
+  </script>
 </body>
 </html>
