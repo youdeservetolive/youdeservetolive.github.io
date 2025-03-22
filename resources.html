@@ -42,14 +42,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.95rem;
       z-index: 1000;
     }
 
-    .nav-wrapper {
-      flex-grow: 1;
+    .nav-center {
       display: flex;
       justify-content: center;
+      flex: 1;
     }
 
     .nav-links {
@@ -66,16 +65,49 @@
       text-decoration: underline;
     }
 
-    .toggle-btn {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
+    .theme-toggle {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      background-color: var(--border-color);
+      border-radius: 10px;
       cursor: pointer;
-      color: var(--text-color);
+    }
+
+    .theme-toggle::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background-color: var(--text-color);
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    body.light .theme-toggle::before {
+      transform: translateX(20px);
+    }
+
+    #content-box {
+      margin-top: 100px;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    #state-display {
+      font-size: 1.2rem;
+      white-space: pre-line;
+      padding: 10px;
     }
 
     .search-container {
-      margin-top: 100px;
+      margin-top: 20px;
       text-align: center;
     }
 
@@ -89,22 +121,6 @@
 
     button {
       cursor: pointer;
-    }
-
-    #content-box {
-      margin-top: 20px;
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-    }
-
-    #state-display {
-      font-size: 1.2rem;
-      white-space: pre-line;
-      padding: 10px;
     }
 
     a {
@@ -136,12 +152,12 @@
         font-size: 0.85rem;
       }
 
-      #state-display {
-        font-size: 1rem;
-      }
-
       input, button {
         width: 90%;
+      }
+
+      #state-display {
+        font-size: 1rem;
       }
 
       .footer {
@@ -151,15 +167,16 @@
   </style>
 </head>
 <body>
+
   <nav>
-    <div class="nav-wrapper">
+    <div class="nav-center">
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/resources">Resources</a>
         <a href="/about">About</a>
       </div>
     </div>
-    <button class="toggle-btn" onclick="toggleMode()" title="Toggle light/dark mode">🌙</button>
+    <div class="theme-toggle" onclick="toggleMode()" title="Toggle light/dark mode"></div>
   </nav>
 
   <div class="search-container">
@@ -331,8 +348,6 @@
 
     function toggleMode() {
       document.body.classList.toggle("light");
-      const btn = document.querySelector(".toggle-btn");
-      btn.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
     }
 
     const validStates = [
