@@ -5,21 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resources | YDTL</title>
   <style>
-    :root {
-      --bg-color: black;
-      --text-color: white;
-      --border-color: gray;
-    }
-
-    body.light {
-      --bg-color: white;
-      --text-color: black;
-      --border-color: #ccc;
-    }
-
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: black;
+      color: white;
       font-family: "Courier New", Courier, monospace;
       margin: 0;
       padding: 20px;
@@ -27,71 +15,30 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
+      box-sizing: border-box;
     }
 
     nav {
-      width: 100%;
-      border-bottom: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      z-index: 1000;
-    }
-
-    .nav-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       width: 100%;
-      max-width: 800px;
-    }
-
-    .nav-links {
+      border-bottom: 1px solid gray;
+      background-color: black;
+      padding: 10px 0;
       display: flex;
-      gap: 40px;
       justify-content: center;
-      flex: 1;
+      gap: 40px;
+      font-size: 0.95rem;
     }
 
     nav a {
-      color: var(--text-color);
+      color: white;
       text-decoration: none;
     }
 
     nav a:hover {
       text-decoration: underline;
-    }
-
-    .theme-toggle {
-      position: relative;
-      width: 40px;
-      height: 20px;
-      background-color: var(--border-color);
-      border-radius: 10px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .theme-toggle::before {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 16px;
-      height: 16px;
-      background-color: var(--text-color);
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-
-    body.light .theme-toggle::before {
-      transform: translateX(20px);
     }
 
     #content-box {
@@ -130,6 +77,7 @@
     a {
       color: lightblue;
       text-decoration: underline;
+      word-break: break-word;
     }
 
     .footer {
@@ -150,18 +98,18 @@
     }
 
     @media (max-width: 600px) {
-      .nav-links {
+      nav {
         gap: 20px;
         font-size: 0.85rem;
         flex-wrap: wrap;
       }
 
-      input, button {
-        width: 90%;
-      }
-
       #state-display {
         font-size: 1rem;
+      }
+
+      input, button {
+        width: 90%;
       }
 
       .footer {
@@ -173,14 +121,9 @@
 <body>
 
   <nav>
-    <div class="nav-wrapper">
-      <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/resources">Resources</a>
-        <a href="/about">About</a>
-      </div>
-      <div class="theme-toggle" onclick="toggleMode()" title="Toggle light/dark mode"></div>
-    </div>
+    <a href="/">Home</a>
+    <a href="/resources">Resources</a>
+    <a href="/about">About</a>
   </nav>
 
   <div class="search-container">
@@ -195,7 +138,7 @@
   </div>
 
   <p class="footer">
-   In memory of <a href="/about">Joshua Blackledge</a>
+    In memory of <a href="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer">Joshua Blackledge</a> — created by Elijah Segers and Maddie Andros
   </p>
 
   <script>
@@ -245,13 +188,19 @@
     }
 
     async function searchFiles(region, country) {
-      let filePath = country === "United States"
-        ? `United States/${region}.txt`
-        : `${country}/${country}.txt`;
+      let filePath = "";
+
+      if (country === "United States") {
+        filePath = `United States/${region}.txt`;
+      } else {
+        filePath = `${country}/${country}.txt`;
+      }
 
       try {
         const response = await fetch(filePath);
-        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) throw new Error();
+        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) {
+          throw new Error("File not found");
+        }
 
         const text = await response.text();
         updateDisplay(formatText(text.trim()));
@@ -259,19 +208,22 @@
         if (country === "United States") {
           try {
             const fallback = await fetch("United States/USA.txt");
-            const text = await fallback.text();
-            updateDisplay(`"${region}" wasn't in our records, so here is the general information for United States.\n\n${formatText(text.trim())}`);
+            const fallbackText = await fallback.text();
+            updateDisplay(`"${region}" wasn't in our records, so here is the general information for United States.\n\n` + formatText(fallbackText.trim()));
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
         } else {
           try {
-            const res = await fetch("NotSupported.json");
-            const data = await res.json();
+            const fallbackJson = await fetch("NotSupported.json");
+            const data = await fallbackJson.json();
+
             if (data[country]) {
-              let output = `"${region}" wasn't in our records, so here is the general information for ${country}:\n\n`;
-              for (let key in data[country]) output += `${key}: ${data[country][key]}\n`;
-              updateDisplay(output.trim());
+              let info = `"${region}" wasn't in our records, so here is the general information for ${country}.\n\n`;
+              for (let key in data[country]) {
+                info += `${key}: ${data[country][key]}\n`;
+              }
+              updateDisplay(info.trim());
             } else {
               updateDisplay(`No fallback data for ${country}.`);
             }
@@ -287,7 +239,12 @@
     }
 
     function capitalizeWords(str) {
-      return str.toLowerCase().split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      return str
+        .toLowerCase()
+        .split(" ")
+        .filter(word => word.length > 0)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
     }
 
     function formatText(text) {
@@ -300,30 +257,40 @@
     }
 
     function findClosestMatch(input) {
-      let closest = "", minDist = Infinity;
-      [...validStates, ...validCountries].forEach(loc => {
-        let dist = levenshteinDistance(input.toLowerCase(), loc.toLowerCase());
-        if (dist < minDist) { minDist = dist; closest = loc; }
+      let closestMatch = "";
+      let shortestDistance = Infinity;
+      const all = [...validStates, ...validCountries];
+
+      all.forEach(location => {
+        let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+          closestMatch = location;
+        }
       });
-      return minDist <= 2 ? closest : "";
+
+      return shortestDistance <= 2 ? closestMatch : "";
     }
 
     function levenshteinDistance(a, b) {
-      const dp = Array(a.length + 1).fill().map(() => Array(b.length + 1).fill(0));
-      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+      const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
+        Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+      );
+
       for (let i = 1; i <= a.length; i++) {
         for (let j = 1; j <= b.length; j++) {
-          dp[i][j] = a[i - 1] === b[j - 1]
-            ? dp[i - 1][j - 1]
-            : Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
+          matrix[i][j] =
+            a[i - 1] === b[j - 1]
+              ? matrix[i - 1][j - 1]
+              : Math.min(
+                  matrix[i - 1][j] + 1,
+                  matrix[i][j - 1] + 1,
+                  matrix[i - 1][j - 1] + 1
+                );
         }
       }
-      return dp[a.length][b.length];
-    }
 
-    function toggleMode() {
-      document.body.classList.toggle("light");
+      return matrix[a.length][b.length];
     }
 
     const validStates = [
