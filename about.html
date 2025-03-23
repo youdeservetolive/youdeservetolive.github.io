@@ -137,6 +137,15 @@
 
     .section {
       margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      text-align: left;
+      color: var(--link-color);
     }
 
     .footer {
@@ -178,6 +187,10 @@
         top: 8px;
         right: 8px;
       }
+
+      .section h2 {
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -200,17 +213,19 @@
   <!-- Main Content -->
   <div class="container">
     <div class="photo">
-      <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/485000101_962206192757405_4977742977500037645_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=MoonExRdl3gQ7kNvgHlXMbt&_nc_oc=AdnsbaGp1BHsduK_BMfEHoZlNXucphqZzkU7NX1or75VDxaKIoGzd-GUx2_MBU2gjXg&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=ht2yZppnZO6U9AtTy5oTwQ&oh=00_AYFk4lE1RijldapqmwMl8_mhu-ekvjjnybvxJ5hs3S1b2Q&oe=67E34BFB" alt="Joshua Blackledge">
+      <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/485000101_962206192757405_4977742977500037645_n.jpg" alt="Joshua Blackledge">
     </div>
 
     <div class="content">
       <section class="section" id="dedication">
+        <h2>Dedication</h2>
         <p>
           This site was created in honor of Joshua Blackledge. Joshua, known as Josh, and "mommyjoshua" and "f30joshh" on TikTok, took his own life 3/18/2025.
         </p>
       </section>
 
       <section class="section" id="information">
+        <h2>Information</h2>
         <p>
           Mental health is a difficult topic, for everyone, and the purpose of this site is to open up that conversation a little, primarily focusing on suicide prevention. Resources aren't lacking, but are typically a little complicated to find. This site removes that barrier, and gives you resources directly based on where you are.
         </p>
@@ -225,6 +240,7 @@
       </section>
 
       <section class="section" id="thanks">
+        <h2>Thanks</h2>
         <p>
           Thank you to the following contributors who helped build this site, as well as helped share it during the beginning stages:
         </p>
@@ -244,7 +260,6 @@
   <script>
     const toggle = document.getElementById("modeSwitch");
 
-    // Load theme from localStorage
     if (localStorage.getItem("theme") === "light") {
       document.body.classList.add("light-mode");
       toggle.checked = true;
