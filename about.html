@@ -5,38 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About | YDTL</title>
   <style>
-    :root {
-      --bg-color: black;
-      --text-color: white;
-      --link-color: lightblue;
-      --border-color: gray;
-      --footer-color: gray;
-    }
-
-    body.light-mode {
-      --bg-color: #fefefe;
-      --text-color: #111;
-      --link-color: #0077cc;
-      --border-color: #ccc;
-      --footer-color: #555;
-    }
-
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: black;
+      color: white;
       font-family: "Courier New", Courier, monospace;
       margin: 0;
       padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: background-color 0.3s, color 0.3s;
     }
 
     nav {
       width: 100%;
-      border-bottom: 1px solid var(--border-color);
-      background-color: var(--bg-color);
+      border-bottom: 1px solid gray;
+      background-color: black;
       padding: 10px 0;
       display: flex;
       justify-content: center;
@@ -49,63 +32,12 @@
     }
 
     nav a {
-      color: var(--text-color);
+      color: white;
       text-decoration: none;
     }
 
     nav a:hover {
       text-decoration: underline;
-    }
-
-    .theme-toggle {
-      position: absolute;
-      right: 10px;
-      top: 12px;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 42px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #777;
-      transition: .4s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(18px);
     }
 
     .container {
@@ -138,35 +70,35 @@
     .section {
       margin-bottom: 30px;
       padding-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid gray;
     }
 
     .section h2 {
       font-size: 1.2rem;
       margin-bottom: 10px;
       text-align: left;
-      color: var(--link-color);
+      color: lightblue;
     }
 
     .footer {
       font-size: 0.85rem;
-      color: var(--footer-color);
+      color: gray;
       text-align: center;
       margin-top: auto;
       padding: 20px;
     }
 
     .footer a {
-      color: var(--footer-color);
+      color: gray;
       text-decoration: underline;
     }
 
     .footer a:hover {
-      color: var(--link-color);
+      color: lightblue;
     }
 
     a.button-link {
-      color: var(--link-color);
+      color: lightblue;
       text-decoration: underline;
       font-weight: bold;
     }
@@ -183,11 +115,6 @@
         margin-bottom: 20px;
       }
 
-      .theme-toggle {
-        top: 8px;
-        right: 8px;
-      }
-
       .section h2 {
         text-align: center;
       }
@@ -195,13 +122,6 @@
   </style>
 </head>
 <body>
-  <!-- Toggle Switch -->
-  <div class="theme-toggle">
-    <label class="switch">
-      <input type="checkbox" id="modeSwitch" />
-      <span class="slider"></span>
-    </label>
-  </div>
 
   <!-- Navigation Bar -->
   <nav>
@@ -213,39 +133,39 @@
   <!-- Main Content -->
   <div class="container">
     <div class="photo">
-      <img src="https://github.com/youdeservetolive/youdeservetolive.github.io/blob/main/josh%20ccps.jpg?raw=true" alt="Joshua Blackledge">
+      <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/485000101_962206192757405_4977742977500037645_n.jpg" alt="Joshua Blackledge">
     </div>
 
     <div class="content">
       <section class="section" id="dedication">
         <h2>Dedication</h2>
         <p>
-          This site was created in honor of Joshua Blackledge. Joshua, known as Josh, and "mommyjoshua" and "f30joshh" on TikTok, took his own life 3/18/2025.
+          This site was created in honor of Joshua Blackledge. Joshua, known as Josh, or "mommyjoshua" and "f30joshh" on TikTok, took his own life on 3/18/2025.
         </p>
       </section>
 
       <section class="section" id="information">
         <h2>Information</h2>
         <p>
-          Mental health is a difficult topic, for everyone, and the purpose of this site is to open up that conversation a little, primarily focusing on suicide prevention. Resources aren't lacking, but are typically a little complicated to find. This site removes that barrier, and gives you resources directly based on where you are.
+          Mental health is a difficult topic, and the purpose of this site is to open up that conversation. While it may be difficult to share your feelings with those close to you, our resources are confidential and are always accessible. Whether you’re experiencing a crisis or simply need someone to talk to, our site highlights a variety of hotlines (emergency/ crisis) and warmlines (non emergency) to support you. You are not alone.
         </p>
         <p>
-          When you visit the resources page, the site uses your IP to see your state and country (WE DO NOT STORE THIS DATA.), and show information based on your location. You can look up states (limited to the US), and countries.
+          Resources aren't lacking, but are typically a little complicated to find especially for countries outside the United States. This site aims to remove that barrier, and gives you resources directly based on where you are located. When you visit the resources page, the site uses your IP to see your state and country (WE DO NOT STORE THIS DATA.), and show information based on your location. Additionally, you can look up states (limited to the US) and countries through the search bar.
         </p>
         <p>
-          View the full reference of all regions and countries we cover here:
-          <br />
-          <a href="/masterlist" class="button-link">Open the Master List</a>
+          Click here to view the full reference of all regions and countries we cover:<br />
+          <a href="/masterlist" class="button-link">Open Master List</a>
         </p>
       </section>
 
       <section class="section" id="thanks">
         <h2>Thanks</h2>
         <p>
-          Thank you to the following contributors who helped build this site, as well as helped share it during the beginning stages:
+          Thank you to the following contributors who helped build this site, as well as helped share it during our beginning stages:
         </p>
         <p>
-          Maddie Andros – helped collect resources from everywhere we support, as well as the sole creator of the Master List
+          Elijah Segers - founder / developer
+          Maddie Andros – co founder / resource collector 
         </p>
       </section>
     </div>
@@ -256,20 +176,5 @@
     In memory of <a href="/about">Joshua Blackledge</a>
   </p>
 
-  <!-- Theme Toggle Script -->
-  <script>
-    const toggle = document.getElementById("modeSwitch");
-
-    if (localStorage.getItem("theme") === "light") {
-      document.body.classList.add("light-mode");
-      toggle.checked = true;
-    }
-
-    toggle.addEventListener("change", () => {
-      document.body.classList.toggle("light-mode");
-      const isLight = document.body.classList.contains("light-mode");
-      localStorage.setItem("theme", isLight ? "light" : "dark");
-    });
-  </script>
 </body>
 </html>
