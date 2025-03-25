@@ -151,7 +151,7 @@
         const data = await response.json();
         detectedCountry = capitalizeWords(data.country);
         detectedRegion = capitalizeWords(data.region);
-        updateDisplay(`${detectedRegion} CONFIRMED`);
+        updateDisplay(`${detectedRegion}`);
         searchFiles(detectedRegion, detectedCountry);
       } catch (error) {
         updateDisplay("Error fetching location.");
@@ -209,7 +209,7 @@
           try {
             const fallback = await fetch("United States/USA.txt");
             const fallbackText = await fallback.text();
-            updateDisplay(`"${region}" wasn't in our records, so here is the general information for United States.\n\n` + formatText(fallbackText.trim()));
+            updateDisplay(`"Here is the general information for United States.\n\n` + formatText(fallbackText.trim()));
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
