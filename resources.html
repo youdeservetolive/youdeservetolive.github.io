@@ -45,10 +45,19 @@
       margin-top: 100px;
       flex-grow: 1;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       width: 100%;
+    }
+
+    #location-box {
+      border: 1px solid white;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      opacity: 0.85;
     }
 
     #state-display {
@@ -115,6 +124,10 @@
       .footer {
         font-size: 0.8rem;
       }
+
+      #location-box {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -134,6 +147,7 @@
   </div>
 
   <div id="content-box">
+    <div id="location-box">Fetching location...</div>
     <p id="state-display">Fetching IP info...</p>
   </div>
 
@@ -151,9 +165,10 @@
         const data = await response.json();
         detectedCountry = capitalizeWords(data.country);
         detectedRegion = capitalizeWords(data.region);
-        updateDisplay(`${detectedRegion}`);
+        setLocationBox(`${detectedRegion}, ${detectedCountry}`);
         searchFiles(detectedRegion, detectedCountry);
       } catch (error) {
+        setLocationBox("Unknown");
         updateDisplay("Error fetching location.");
       }
     }
@@ -179,29 +194,25 @@
       const isRegion = validStates.includes(userInput);
 
       if (isCountry) {
+        setLocationBox(userInput);
         searchFiles(userInput, userInput);
       } else if (isRegion) {
+        setLocationBox(`${userInput}, United States`);
         searchFiles(userInput, "United States");
       } else {
+        setLocationBox("Unknown");
         updateDisplay(`No data available for "${userInput}".`);
       }
     }
 
     async function searchFiles(region, country) {
-      let filePath = "";
-
-      if (country === "United States") {
-        filePath = `United States/${region}.txt`;
-      } else {
-        filePath = `${country}/${country}.txt`;
-      }
+      let filePath = country === "United States"
+        ? `United States/${region}.txt`
+        : `${country}/${country}.txt`;
 
       try {
         const response = await fetch(filePath);
-        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) {
-          throw new Error("File not found");
-        }
-
+        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) throw new Error();
         const text = await response.text();
         updateDisplay(formatText(text.trim()));
       } catch {
@@ -209,7 +220,7 @@
           try {
             const fallback = await fetch("United States/USA.txt");
             const fallbackText = await fallback.text();
-            updateDisplay(`"Here is the general information for United States.\n\n` + formatText(fallbackText.trim()));
+            updateDisplay(`Here is the general information for United States.\n\n${formatText(fallbackText.trim())}`);
           } catch {
             updateDisplay("No data available for your U.S. region.");
           }
@@ -238,6 +249,10 @@
       document.getElementById("state-display").innerHTML = text;
     }
 
+    function setLocationBox(text) {
+      document.getElementById("location-box").textContent = text;
+    }
+
     function capitalizeWords(str) {
       return str
         .toLowerCase()
@@ -262,7 +277,7 @@
       const all = [...validStates, ...validCountries];
 
       all.forEach(location => {
-        let distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
+        const distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
         if (distance < shortestDistance) {
           shortestDistance = distance;
           closestMatch = location;
@@ -304,24 +319,10 @@
     ];
 
     const validCountries = [
-      "Argentina",
-      "Australia",
-      "Brazil",
-      "Canada",
-      "China",
-      "France",
-      "Germany",
-      "India",
-      "Italy",
-      "Japan",
-      "Mexico",
-      "Russia",
-      "South Africa",
-      "South Korea",
-      "Spain",
-      "United Kingdom"
+      "Argentina", "Australia", "Brazil", "Canada", "China", "France", "Germany",
+      "India", "Italy", "Japan", "Mexico", "Russia", "South Africa", "South Korea",
+      "Spain", "United Kingdom"
     ];
-
 
     getLocation();
   </script>
