@@ -17,12 +17,13 @@ This site is open source, and will stay open source. Resources by state/country 
 
 
 
-## Acknowledgements
+## Founder Acknowledgements 
 - [Maddie Andros](https://instagram.com/unmaddiee)
-    - She helped collect the resources for every state, and all countries. Couldn't have done this without her.
-
+    - Co Founder & She helped collect the resources for every state, and all countries. Couldn't have done this without her.
+- Elijah Segers
+      - me 🗣️ - developer/founder
  - ChatGPT
-    - Look, I can code, but not this well. ChatGPT as stupid as it sounds helped with quite a bit of code and translate a lot of garbage I wrote in python into HTML/JS.
+    - Look, I can code, but not this well. ChatGPT, as stupid as it sounds, helped with quite a bit of code and translate a lot of garbage I wrote in python into HTML/JS (yes, this started out as a python script).
  
 ## USA - Advocate for Change
 
