@@ -1,335 +1,482 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Resources | YDTL</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      font-family: "Courier New", Courier, monospace;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resources | YDTL</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        font-family: "Courier New", Courier, monospace;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
 
-    nav {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      border-bottom: 1px solid gray;
-      background-color: black;
-      padding: 10px 0;
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      font-size: 0.95rem;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    #content-box {
-      margin-top: 100px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-    }
-
-    #location-box {
-      border: 1px solid white;
-      padding: 6px 12px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      opacity: 0.85;
-    }
-
-    #state-display {
-      font-size: 1.2rem;
-      white-space: pre-line;
-      padding: 10px;
-    }
-
-    .search-container {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    input, button {
-      font-size: 1rem;
-      padding: 8px;
-      margin: 5px;
-      width: 250px;
-      max-width: 90vw;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: lightblue;
-      text-decoration: underline;
-      word-break: break-word;
-    }
-
-    .footer {
-      font-size: 0.9rem;
-      color: gray;
-      text-align: center;
-      margin-top: auto;
-      padding-bottom: 20px;
-    }
-
-    .footer a {
-      color: gray;
-      text-decoration: underline;
-    }
-
-    .footer a:hover {
-      color: lightgray;
-    }
-
-    @media (max-width: 600px) {
       nav {
-        gap: 20px;
-        font-size: 0.85rem;
-        flex-wrap: wrap;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-bottom: 1px solid gray;
+        background-color: black;
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        font-size: 0.95rem;
       }
 
-      #state-display {
-        font-size: 1rem;
+      nav a {
+        color: white;
+        text-decoration: none;
       }
 
-      input, button {
-        width: 90%;
+      nav a:hover {
+        text-decoration: underline;
       }
 
-      .footer {
-        font-size: 0.8rem;
+      #content-box {
+        margin-top: 100px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
       }
 
       #location-box {
-        font-size: 0.95rem;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <nav>
-    <a href="/">Home</a>
-    <a href="/resources">Resources</a>
-    <a href="/about">About</a>
-  </nav>
-
-  <div class="search-container">
-    <p>Incorrect area? Please enter your area name to search:</p>
-    <input type="text" id="manual-input" placeholder="Enter state or country" />
-    <button onclick="searchLocation()">Search</button>
-    <p id="suggestion" style="color: yellow;"></p>
-  </div>
-
-  <div id="content-box">
-    <div id="location-box">Fetching location...</div>
-    <p id="state-display">...</p>
-  </div>
-
-  <p class="footer">
-    by teens, <a href="/about">for all.</a>
-  </p>
-
-  <script>
-    let detectedCountry = "";
-    let detectedRegion = "";
-
-    async function getLocation() {
-      try {
-        const response = await fetch("https://ipwhois.app/json/");
-        const data = await response.json();
-        detectedCountry = capitalizeWords(data.country);
-        detectedRegion = capitalizeWords(data.region);
-        setLocationBox(`${detectedRegion}, ${detectedCountry}`);
-        searchFiles(detectedRegion, detectedCountry);
-      } catch (error) {
-        setLocationBox("Unknown");
-        updateDisplay("Error fetching location.");
-      }
-    }
-
-    function searchLocation() {
-      let userInput = document.getElementById("manual-input").value.trim();
-      if (!userInput) {
-        alert("Please enter a location.");
-        return;
+        border: 1px solid white;
+        padding: 6px 12px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        opacity: 0.85;
       }
 
-      userInput = capitalizeWords(userInput);
-      let correctedName = findClosestMatch(userInput);
-
-      if (correctedName && correctedName.toLowerCase() !== userInput.toLowerCase()) {
-        document.getElementById("suggestion").textContent = `Did you mean: ${correctedName}?`;
-        userInput = capitalizeWords(correctedName);
-      } else {
-        document.getElementById("suggestion").textContent = "";
+      #state-display {
+        font-size: 1.2rem;
+        white-space: pre-line;
+        padding: 10px;
       }
 
-      const isCountry = validCountries.includes(userInput);
-      const isRegion = validStates.includes(userInput);
-
-      if (isCountry) {
-        setLocationBox(userInput);
-        searchFiles(userInput, userInput);
-      } else if (isRegion) {
-        setLocationBox(`${userInput}, United States`);
-        searchFiles(userInput, "United States");
-      } else {
-        setLocationBox("Unknown");
-        updateDisplay(`No data available for "${userInput}".`);
+      .search-container {
+        margin-top: 20px;
+        text-align: center;
       }
-    }
 
-    async function searchFiles(region, country) {
-      let filePath = country === "United States"
-        ? `United States/${region}.txt`
-        : `${country}/${country}.txt`;
+      input,
+      button {
+        font-size: 1rem;
+        padding: 8px;
+        margin: 5px;
+        width: 250px;
+        max-width: 90vw;
+      }
 
-      try {
-        const response = await fetch(filePath);
-        if (!response.ok || response.headers.get("Content-Type").includes("text/html")) throw new Error();
-        const text = await response.text();
-        updateDisplay(formatText(text.trim()));
-      } catch {
-        if (country === "United States") {
-          try {
-            const fallback = await fetch("United States/USA.txt");
-            const fallbackText = await fallback.text();
-            updateDisplay(`Here is the general information for United States.\n\n${formatText(fallbackText.trim())}`);
-          } catch {
-            updateDisplay("No data available for your U.S. region.");
-          }
+      button {
+        cursor: pointer;
+      }
+
+      a {
+        color: lightblue;
+        text-decoration: underline;
+        word-break: break-word;
+      }
+
+      .footer {
+        font-size: 0.9rem;
+        color: gray;
+        text-align: center;
+        margin-top: auto;
+        padding-bottom: 20px;
+      }
+
+      .footer a {
+        color: gray;
+        text-decoration: underline;
+      }
+
+      .footer a:hover {
+        color: lightgray;
+      }
+
+      @media (max-width: 600px) {
+        nav {
+          gap: 20px;
+          font-size: 0.85rem;
+          flex-wrap: wrap;
+        }
+
+        #state-display {
+          font-size: 1rem;
+        }
+
+        input,
+        button {
+          width: 90%;
+        }
+
+        .footer {
+          font-size: 0.8rem;
+        }
+
+        #location-box {
+          font-size: 0.95rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/resources">Resources</a>
+      <a href="/about">About</a>
+      <a href="/masterlist">Master List</a>
+    </nav>
+
+    <div class="search-container">
+      <p>Incorrect area? Please enter your area name to search:</p>
+      <input
+        type="text"
+        id="manual-input"
+        placeholder="Enter state or country"
+      />
+      <button onclick="searchLocation()">Search</button>
+      <p id="suggestion" style="color: yellow"></p>
+    </div>
+
+    <div id="content-box">
+      <div id="location-box">Fetching location...</div>
+      <p id="state-display">...</p>
+    </div>
+
+    <p class="footer">by teens, <a href="/about">for all.</a></p>
+
+    <script>
+      let detectedCountry = "";
+      let detectedRegion = "";
+
+      async function getLocation() {
+        try {
+          const response = await fetch("https://ipwhois.app/json/");
+          const data = await response.json();
+          detectedCountry = capitalizeWords(data.country);
+          detectedRegion = capitalizeWords(data.region);
+          setLocationBox(`${detectedRegion}, ${detectedCountry}`);
+          searchFiles(detectedRegion, detectedCountry);
+        } catch (error) {
+          setLocationBox("Unknown");
+          updateDisplay("Error fetching location.");
+        }
+      }
+
+      function searchLocation() {
+        let userInput = document.getElementById("manual-input").value.trim();
+        if (!userInput) {
+          alert("Please enter a location.");
+          return;
+        }
+
+        userInput = capitalizeWords(userInput);
+        if (countryNicknames[userInput]) {
+          userInput = countryNicknames[userInput];
+        }
+        let correctedName = findClosestMatch(userInput);
+
+        if (
+          correctedName &&
+          correctedName.toLowerCase() !== userInput.toLowerCase()
+        ) {
+          document.getElementById(
+            "suggestion"
+          ).textContent = `Did you mean: ${correctedName}?`;
+          userInput = capitalizeWords(correctedName);
         } else {
-          try {
-            const fallbackJson = await fetch("NotSupported.json");
-            const data = await fallbackJson.json();
+          document.getElementById("suggestion").textContent = "";
+        }
 
-            if (data[country]) {
-              let info = `"${region}" wasn't in our records, so here is the general information for ${country}.\n\n`;
-              for (let key in data[country]) {
-                info += `${key}: ${data[country][key]}\n`;
-              }
-              updateDisplay(info.trim());
-            } else {
-              updateDisplay(`No fallback data for ${country}.`);
+        const isCountry = validCountries.includes(userInput);
+        const isRegion = validStates.includes(userInput);
+
+        if (isCountry) {
+          setLocationBox(userInput);
+          searchFiles(userInput, userInput);
+        } else if (isRegion) {
+          setLocationBox(`${userInput}, United States`);
+          searchFiles(userInput, "United States");
+        } else {
+          setLocationBox("Unknown");
+          updateDisplay(`No data available for "${userInput}".`);
+        }
+      }
+
+      async function searchFiles(region, country) {
+        let filePath =
+          country === "United States"
+            ? `United States/${region}.txt`
+            : `${country}/${country}.txt`;
+
+        try {
+          const response = await fetch(filePath);
+          if (
+            !response.ok ||
+            response.headers.get("Content-Type").includes("text/html")
+          )
+            throw new Error();
+          const text = await response.text();
+          updateDisplay(formatText(text.trim()));
+        } catch {
+          if (country === "United States") {
+            try {
+              const fallback = await fetch("United States/USA.txt");
+              const fallbackText = await fallback.text();
+              updateDisplay(
+                `Here is the general information for United States.\n\n${formatText(
+                  fallbackText.trim()
+                )}`
+              );
+            } catch {
+              updateDisplay("No data available for your U.S. region.");
             }
-          } catch {
-            updateDisplay("Error loading fallback emergency contacts.");
+          } else {
+            try {
+              const fallbackJson = await fetch("NotSupported.json");
+              const data = await fallbackJson.json();
+
+              if (data[country]) {
+                let info = `"${region}" wasn't in our records, so here is the general information for ${country}.\n\n`;
+                for (let key in data[country]) {
+                  info += `${key}: ${data[country][key]}\n`;
+                }
+                updateDisplay(info.trim());
+              } else {
+                updateDisplay(`No fallback data for ${country}.`);
+              }
+            } catch {
+              updateDisplay("Error loading fallback emergency contacts.");
+            }
           }
         }
       }
-    }
 
-    function updateDisplay(text) {
-      document.getElementById("state-display").innerHTML = text;
-    }
-
-    function setLocationBox(text) {
-      document.getElementById("location-box").textContent = text;
-    }
-
-    function capitalizeWords(str) {
-      return str
-        .toLowerCase()
-        .split(" ")
-        .filter(word => word.length > 0)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-    }
-
-    function formatText(text) {
-      text = text.replace(/(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g, '<a href="tel:$&">$&</a>');
-      text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, url => {
-        const fixedUrl = url.startsWith("www.") ? "http://" + url : url;
-        return `<a href="${fixedUrl}" target="_blank">${url}</a>`;
-      });
-      return text;
-    }
-
-    function findClosestMatch(input) {
-      let closestMatch = "";
-      let shortestDistance = Infinity;
-      const all = [...validStates, ...validCountries];
-
-      all.forEach(location => {
-        const distance = levenshteinDistance(input.toLowerCase(), location.toLowerCase());
-        if (distance < shortestDistance) {
-          shortestDistance = distance;
-          closestMatch = location;
-        }
-      });
-
-      return shortestDistance <= 2 ? closestMatch : "";
-    }
-
-    function levenshteinDistance(a, b) {
-      const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
-        Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-      );
-
-      for (let i = 1; i <= a.length; i++) {
-        for (let j = 1; j <= b.length; j++) {
-          matrix[i][j] =
-            a[i - 1] === b[j - 1]
-              ? matrix[i - 1][j - 1]
-              : Math.min(
-                  matrix[i - 1][j] + 1,
-                  matrix[i][j - 1] + 1,
-                  matrix[i - 1][j - 1] + 1
-                );
-        }
+      function updateDisplay(text) {
+        document.getElementById("state-display").innerHTML = text;
       }
 
-      return matrix[a.length][b.length];
-    }
+      function setLocationBox(text) {
+        document.getElementById("location-box").textContent = text;
+      }
 
-    const validStates = [
-      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-      "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-      "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-      "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-      "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-      "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-      "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming", "USA"
-    ];
+      function capitalizeWords(str) {
+        return str
+          .toLowerCase()
+          .split(" ")
+          .filter((word) => word.length > 0)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
 
-    const validCountries = [
-    "Algeria", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Bahamas", "Bahrain",
-    "Bangladesh", "Barbados", "Belgium", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil",
-    "Bulgaria", "Burkina Faso", "Burundi", "Canada", "China", "Colombia", "Costa Rica", "Croatia",
-    "Czech Republic", "Denmark", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia",
-    "Ethiopia", "Finland", "France", "Germany", "Ghana", "Greece", "India", "Italy", "Japan", "Kenya",
-    "Malaysia", "Mexico", "New Zealand", "Republic of Korea", "Russia", "Singapore", "South Africa",
-    "Spain", "United Kingdom", "United States", "Zimbabwe"
-  ];
+      function formatText(text) {
+        text = text.replace(
+          /(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g,
+          '<a href="tel:$&">$&</a>'
+        );
+        text = text.replace(/(https?:\/\/[^\s]+|www\.[^\s]+)/g, (url) => {
+          const fixedUrl = url.startsWith("www.") ? "http://" + url : url;
+          return `<a href="${fixedUrl}" target="_blank">${url}</a>`;
+        });
+        return text;
+      }
 
+      function findClosestMatch(input) {
+        let closestMatch = "";
+        let shortestDistance = Infinity;
+        const all = [...validStates, ...validCountries];
 
-    getLocation();
-  </script>
-</body>
+        all.forEach((location) => {
+          const distance = levenshteinDistance(
+            input.toLowerCase(),
+            location.toLowerCase()
+          );
+          if (distance < shortestDistance) {
+            shortestDistance = distance;
+            closestMatch = location;
+          }
+        });
+
+        return shortestDistance <= 2 ? closestMatch : "";
+      }
+
+      function levenshteinDistance(a, b) {
+        const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
+          Array.from({ length: b.length + 1 }, (_, j) =>
+            i === 0 ? j : j === 0 ? i : 0
+          )
+        );
+
+        for (let i = 1; i <= a.length; i++) {
+          for (let j = 1; j <= b.length; j++) {
+            matrix[i][j] =
+              a[i - 1] === b[j - 1]
+                ? matrix[i - 1][j - 1]
+                : Math.min(
+                    matrix[i - 1][j] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j - 1] + 1
+                  );
+          }
+        }
+
+        return matrix[a.length][b.length];
+      }
+
+      const validStates = [
+        "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyoming",
+        "USA",
+      ];
+
+      const validCountries = [
+        "Algeria",
+        "Angola",
+        "Argentina",
+        "Armenia",
+        "Australia",
+        "Austria",
+        "Bahamas",
+        "Bahrain",
+        "Bangladesh",
+        "Barbados",
+        "Belgium",
+        "Bolivia",
+        "Bosnia & Herzegovina",
+        "Botswana",
+        "Brazil",
+        "Bulgaria",
+        "Burkina Faso",
+        "Burundi",
+        "Canada",
+        "China",
+        "Colombia",
+        "Costa Rica",
+        "Croatia",
+        "Czech Republic",
+        "Denmark",
+        "Dominican Republic",
+        "Ecuador",
+        "Egypt",
+        "El Salvador",
+        "England",
+        "Estonia",
+        "Ethiopia",
+        "Finland",
+        "France",
+        "Germany",
+        "Ghana",
+        "Greece",
+        "India",
+        "Italy",
+        "Japan",
+        "Kenya",
+        "Malaysia",
+        "Mexico",
+        "New Zealand",
+        "Republic of Korea",
+        "Russia",
+        "Singapore",
+        "South Africa",
+        "Spain",
+        "United Kingdom",
+        "United States",
+        "Zimbabwe",
+      ];
+      const countryNicknames = {
+        Uk: "United Kingdom",
+        "U.K.": "United Kingdom",
+        England: "United Kingdom",
+        Britain: "United Kingdom",
+        "Great Britain": "United Kingdom",
+        Gb: "United Kingdom",
+
+        Usa: "United States",
+        "U.S.A.": "United States",
+        Us: "United States",
+        "U.S.": "United States",
+        America: "United States",
+        "United States Of America": "United States",
+
+        "Down Under": "Australia",
+        Oz: "Australia",
+        Aus: "Australia",
+
+        Can: "Canada",
+        "The Great White North": "Canada",
+
+        Nz: "New Zealand",
+        "Kiwi Land": "New Zealand",
+
+        "Russian Federation": "Russia",
+
+        Prc: "China",
+        "People's Republic Of China": "China",
+      };
+
+      getLocation();
+    </script>
+  </body>
 </html>
