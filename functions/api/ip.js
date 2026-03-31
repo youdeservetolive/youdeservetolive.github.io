@@ -1,33 +1,93 @@
 export async function onRequest(context) {
-  if (context.request.method === "OPTIONS") {
+  const { request } = context;
+
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store"
+  };
+
+  if (request.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type"
-      }
+      headers: corsHeaders
     });
   }
 
+  if (request.method !== "GET") {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: "Method not allowed"
+      }),
+      {
+        status: 405,
+        headers: corsHeaders
+      }
+    );
+  }
+
   try {
-    const upstream = await fetch("https://ipwho.is/", {
+    const clientIP =
+      request.headers.get("CF-Connecting-IP") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      "";
+
+    if (!clientIP) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Could not determine client IP"
+        }),
+        {
+          status: 400,
+          headers: corsHeaders
+        }
+      );
+    }
+
+    const upstream = await fetch(`https://ipwho.is/${encodeURIComponent(clientIP)}`, {
+      method: "GET",
       headers: {
         "Accept": "application/json"
       }
     });
 
-    const body = await upstream.text();
+    const data = await upstream.json();
 
-    return new Response(body, {
-      status: upstream.status,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "no-store"
+    if (!upstream.ok || data.success === false) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: data.message || "ipwho.is lookup failed",
+          upstream_status: upstream.status
+        }),
+        {
+          status: 502,
+          headers: corsHeaders
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        ip: data.ip || clientIP,
+        country: data.country || "",
+        country_code: data.country_code || "",
+        region: data.region || "",
+        city: data.city || "",
+        latitude: data.latitude ?? null,
+        longitude: data.longitude ?? null
+      }),
+      {
+        status: 200,
+        headers: corsHeaders
       }
-    });
-  } catch (e) {
+    );
+  } catch (error) {
     return new Response(
       JSON.stringify({
         success: false,
@@ -35,10 +95,7 @@ export async function onRequest(context) {
       }),
       {
         status: 502,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        }
+        headers: corsHeaders
       }
     );
   }
