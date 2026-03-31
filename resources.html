@@ -175,26 +175,27 @@
     
         if (!response.ok || data.success === false) {
           throw new Error(data.message || "Location lookup failed");
-    }
-
-    detectedCountry = capitalizeWords(data.country || "");
-    detectedRegion = capitalizeWords(data.region || "");
-
-    if (detectedRegion && detectedCountry) {
-      setLocationBox(`${detectedRegion}, ${detectedCountry}`);
-      searchFiles(detectedRegion, detectedCountry);
-    } else if (detectedCountry) {
-      setLocationBox(detectedCountry);
-      searchFiles(detectedCountry, detectedCountry);
-    } else {
-      throw new Error("Missing location data");
-    }
-  } catch (error) {
-    setLocationBox("Unknown");
-    updateDisplay("Error fetching location.");
-  }
+        }
+    
+        detectedCountry = capitalizeWords(data.country || "");
+        detectedRegion = capitalizeWords(data.region || "");
+    
+        if (detectedCountry === "United States" && detectedRegion) {
+          setLocationBox(`${detectedRegion}, ${detectedCountry}`);
+          searchFiles(detectedRegion, detectedCountry);
+        } else if (detectedCountry) {
+          setLocationBox(detectedCountry);
+          searchFiles(detectedCountry, detectedCountry);
+        } else {
+          throw new Error("Missing location data");
+        }
+      } catch (error) {
+        setLocationBox("Unknown");
+        updateDisplay("Error fetching location.");
+      }
 }
 
+      
     function searchLocation() {
       let userInput = document.getElementById("manual-input").value.trim();
       if (!userInput) {
