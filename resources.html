@@ -168,7 +168,7 @@
     let detectedCountry = "";
     let detectedRegion = "";
 
-   async function getLocation() {
+  async function getLocation() {
       try {
         const response = await fetch("/api/ip");
         const data = await response.json();
@@ -187,11 +187,12 @@
           setLocationBox(detectedCountry);
           searchFiles(detectedCountry, detectedCountry);
         } else {
-          throw new Error("Missing location data");
+          setLocationBox("Unknown");
+          updateDisplay("Unable to determine location. Please enter your area manually.");
         }
       } catch (error) {
         setLocationBox("Unknown");
-        updateDisplay("Error fetching location.");
+        updateDisplay("Unable to determine location. Please enter your area manually.");
       }
 }
 
